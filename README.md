@@ -9,11 +9,13 @@
 
 | Nome | Nº USP |
 |------|--------|
-| *Arthur* | *(número)* |
-| *Cecilia* | *(número)* |
-| *Vitoriano* | *(número)* |
+| *Arthur Queima Rosca* | *67* |
+| *Cecília Luis de Queiroz* | *16817870* |
+| *Julia Vitoriano Silva e Silva* | *16879240* |
 | *Matheus Valim Nogueira* | *15746323* |
-| *Thais* | *(número)* |
+| *Thaís Batista da Paixão* | *17015724* |
+| *Thaís Rodrigues Lindquist* | *16813796* |
+
 
 ---
 

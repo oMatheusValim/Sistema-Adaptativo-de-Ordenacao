@@ -31,11 +31,11 @@ O objetivo central não é apenas implementar os algoritmos, mas investigar seu 
 
 ### O(n²)
 - **Insertion Sort**
-- **Selection Sort** *(ou Bubble Sort — a definir)*
+- **Selection Sort** 
 
 ### O(n log n)
 - **Merge Sort**
-- **Quick Sort** *(ou Heap Sort — a definir)*
+- **Heap Sort** 
 
 ### Alternativo
 - **Counting Sort** *(algoritmo não-comparativo, linear para inteiros com amplitude reduzida)*
@@ -67,6 +67,7 @@ O objetivo central não é apenas implementar os algoritmos, mas investigar seu 
 │   └── datasets/               # Entradas geradas para os experimentos
 ├── results/                    # Saída dos experimentos (CSVs, logs)
 ├── report/                     # Relatório em PDF
+├── instruções.pdf              # Instruções para a realização do projeto
 ├── Makefile
 └── README.md
 ```
@@ -120,7 +121,7 @@ O sistema aceita parâmetros por linha de comando.
 | Parâmetro | Descrição |
 |-----------|-----------|
 | `--modo adaptativo` | Ativa o sistema adaptativo |
-| `--algoritmo <nome>` | Força um algoritmo específico (`insertion`, `selection`, `merge`, `quick`, `counting`) |
+| `--algoritmo <nome>` | Força um algoritmo específico (`insertion`, `selection`, `merge`, `heap`, `counting`) |
 | `--tamanho <n>` | Gera uma entrada aleatória de tamanho `n` |
 | `--input <arquivo>` | Lê a entrada a partir de um arquivo |
 | `--tipo <tipo>` | Define o tipo da entrada gerada: `aleatorio`, `quase_ordenado`, `reverso`, `repetidos` |
@@ -147,13 +148,14 @@ Para cada execução, o sistema registra:
 
 O sistema classifica a entrada e escolhe o algoritmo com base nas seguintes regras:
 
-| Característica detectada | Algoritmo escolhido |
-|--------------------------|---------------------|
-| Entrada pequena (n ≤ ?) | Insertion Sort |
-| Entrada quase ordenada | Insertion Sort |
-| Muitos valores repetidos | Merge Sort |
-| Inteiros com amplitude pequena | Counting Sort |
-| Entrada grande e aleatória | Quick Sort / Heap Sort |
+| Característica detectada | Algoritmo escolhido | Motivo |
+|---|---|---|
+| Entrada pequena e **quase ordenada** | Insertion Sort | O(n) no melhor caso; overhead mínimo |
+| Entrada pequena com **custo de escrita alto** (poucas trocas desejadas) | Selection Sort | Faz **exatamente n−1 trocas**, independente da entrada |
+| Entrada com **muitos valores repetidos** ou que exige **estabilidade** | Merge Sort | Estável; lida bem com duplicatas |
+| Inteiros com **amplitude pequena** (range ≤ fator de n) | Counting Sort | O(n + k), linear quando k é pequeno |
+| Entrada **grande e aleatória** / quando pior caso importa | Heap Sort | O(n log n) garantido, in-place |
+
 
 > ℹ️ Os limiares exatos e a justificativa experimental para cada regra estão detalhados no relatório.
 
@@ -188,7 +190,9 @@ O script irá:
 
 ## Vídeo de Apresentação
 
-> 🎬 Link: *(a ser adicionado)*
+[![Assista ao Vídeo](https://img.youtube.com)](https://youtu.be)
+
+> Caso o vídeo acima não carregue, você pode assistir [diretamente no YouTube](https://youtu.be) ou baixar via [Google Drive](https://drive.google.com).
 
 ---
 

@@ -9,7 +9,7 @@
 
 | Nome | Nº USP |
 |------|--------|
-| *Arthur Queima Rosca* | *67* |
+| *Arthur Silva de Albuquerque* | *17078155* |
 | *Cecília Luis de Queiroz* | *16817870* |
 | *Julia Vitoriano Silva e Silva* | *16879240* |
 | *Matheus Valim Nogueira* | *15746323* |

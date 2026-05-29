@@ -146,7 +146,7 @@ int countInv(int *arr, int n) {
 
     for (i = 0; i < n-1; i++){
 
-        if (arr[i]<arr[i+1])
+        if (arr[i]>arr[i+1])
             count++;
     }
 
@@ -186,7 +186,7 @@ entry_analysis analyse_entry(char *line){
 
     ea.size = entry_size(line);
     ea.index = entry_index(line);
-    
+
     int *vector = allocate_arr(line, ea.size, ea.index);
 
     ea.amp = entry_amp(vector, ea.size);

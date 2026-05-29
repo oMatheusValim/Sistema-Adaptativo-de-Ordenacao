@@ -148,7 +148,7 @@ int *random_adversarial_arr(int max_num, int max_size){
     for (int i = 0; i < n; i++){
         sequential = chance(0, 100);
 
-        if (sequential < 0.4){
+        if (sequential > 0.7){
             arr[i] = random_int(min, max);
         }
 

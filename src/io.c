@@ -61,6 +61,9 @@ char **read_data_input(char* file_name, int rows){
         lines[i] = malloc((length + 1) * sizeof(char));
         if (lines[i] != NULL) 
             strcpy(lines[i], buffer);
+
+        else
+            printf("ERRO NA ALOCACAO DA LINHA [%d]\n", i);
             
         i++;
     }

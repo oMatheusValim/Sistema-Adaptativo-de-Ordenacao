@@ -12,7 +12,7 @@ int entry_index(char *line){
     return atoi(token);
 
 }
-//retorna o tamanho da entrada (número de colunas no csv)
+
 int entry_size(char *line){
     int i = 0;
     int num_colums_csv = 0;
@@ -26,11 +26,10 @@ int entry_size(char *line){
         i++;
     }
 
-    // Desconsiderando a coluna de index
-    return (num_colums_csv + 1);
+    return (num_colums_csv);
 }
 
-// aloca o array a partir da linha do arquivo
+
 int *allocate_arr(char *line, int n, int index){
 
     // Alocacao do vetor de ints
@@ -46,7 +45,7 @@ int *allocate_arr(char *line, int n, int index){
     int i = 0;
 
     while ((token != NULL) && i < n){
-        arr[i] = atof(token);
+        arr[i] = atoi(token);
         token = strtok(NULL, ",");
         i++;
     }
@@ -54,14 +53,17 @@ int *allocate_arr(char *line, int n, int index){
     return arr;
 }
 
-// retorna a análise de amplitude do array
+
 amp_analysis entry_amp(int *arr, int n){
     amp_analysis amp;
 
     amp.min = arr[0];
     amp.max = arr[0];
 
-    for (int i = 1; i < n-1; i++){
+    amp.min_idx = 0;
+    amp.max_idx = 0;
+
+    for (int i = 1; i < n; i++){
         if (arr[i] < amp.min){
             amp.min = arr[i];
             amp.min_idx = i;
@@ -77,7 +79,7 @@ amp_analysis entry_amp(int *arr, int n){
 
     return amp;
 }
-// retorna a aálise de dispersão do array
+
 dispersion_analysis entry_disp(int *arr, int n){
 
     float sum = 0.0;
@@ -101,7 +103,7 @@ dispersion_analysis entry_disp(int *arr, int n){
     var = var / (n);
 
     // Extrair a raiz quadrada
-    sd = sqrt(sd);
+    sd = sqrt(var);
 
     dispersion_analysis disp;
 
@@ -110,7 +112,7 @@ dispersion_analysis entry_disp(int *arr, int n){
 
     return disp;            
 }
-//conta repetições do valor no array
+
 int count_uniques(int *arr, int n, amp_analysis amp){
     int offset = -1*amp.min;
     int count[amp.amp + 1];
@@ -136,79 +138,35 @@ int count_uniques(int *arr, int n, amp_analysis amp){
 
 }
 
-//CÓDIGO DA INTERNET!!!!!!
 
-    // This function merges two sorted subarrays arr[l..m] and arr[m+1..r] 
-    // and also counts inversions in the whole subarray arr[l..r]
-    int countAndMerge(int arr[], int l, int m, int r) {
-    
-        // Counts in two subarrays
-        int n1 = m - l + 1, n2 = r - m;
+int countInv(int *arr, int n) {
 
-        // Set up two arrays for left and right halves
-        int left[n1], right[n2];
-        for (int i = 0; i < n1; i++)
-            left[i] = arr[i + l];
-        for (int j = 0; j < n2; j++)
-            right[j] = arr[m + 1 + j];
+    int count = 0;
+    int i = 0;
 
-        // Initialize inversion count (or result)
-        // and merge two halves
-        int res = 0;
-        int i = 0, j = 0, k = l;
-        while (i < n1 && j < n2) {
+    for (i = 0; i < n-1; i++){
 
-            // No increment in inversion count
-            // if left[] has a smaller or equal element
-            if (left[i] <= right[j]) 
-                arr[k++] = left[i++];
-        
-            // If right is smaller, then it is smaller than n1-i 
-            // elements because left[] is sorted
-            else {
-                arr[k++] = right[j++];
-                res += (n1 - i);
-            }
-        }
-
-        // Merge remaining elements
-        while (i < n1)
-            arr[k++] = left[i++];
-        while (j < n2)
-            arr[k++] = right[j++];
-
-        return res;
+        if (arr[i]>arr[i+1])
+            count++;
     }
 
-    // Function to count inversions in the array
-    int countInv(int arr[], int l, int r) {
-        int res = 0;
-        if (l < r) {
-            int m = (r + l) / 2;
-
-            // Recursively count inversions
-            // in the left and right halves
-            res += countInv(arr, l, m);
-            res += countInv(arr, m + 1, r);
-
-            // Count inversions such that greater element is in 
-            // the left half and smaller in the right half
-            res += countAndMerge(arr, l, m, r);
-        }
-        return res;
-    }
+    return count;
+}
 
 distribution_analysis entry_distr(int *arr, int n, amp_analysis amp){
-    distribution_analysis distr;   
+
+    distribution_analysis distr = {0};   
 
     distr.disorder = 0.0;
+
     if (n==2){
         if (arr[0]>arr[1])
-        distr.disorder = 1.0;
+            distr.disorder = 1.0;
     }
+
     if (n>2){
-        int inversions = countInv(arr, 0, n);
-        float max_inversions = n*(n-1)/2;
+        int inversions = countInv(arr, n);
+        float max_inversions = (n-1);
         distr.disorder = inversions/max_inversions;
     }
 
@@ -216,8 +174,7 @@ distribution_analysis entry_distr(int *arr, int n, amp_analysis amp){
     int unique_nums_count = count_uniques(arr, n, amp);
 
     distr.repetitions = n - unique_nums_count;
-    distr.duplicate_density = distr.repetitions/n;
-
+    distr.duplicate_density = (float)distr.repetitions/n;
 
     return distr;
 }
@@ -225,16 +182,15 @@ distribution_analysis entry_distr(int *arr, int n, amp_analysis amp){
 
 entry_analysis analyse_entry(char *line){
 
-    entry_analysis ea;
+    entry_analysis ea = {0};
 
-    ea.index = entry_index(line);
     ea.size = entry_size(line);
+    ea.index = entry_index(line);
 
     ea.vector = allocate_arr(line, ea.size, ea.index);
 
     ea.amp = entry_amp(ea.vector, ea.size);
     ea.distr = entry_distr(ea.vector, ea.size, ea.amp);
-        
+
     return ea;
 }
-

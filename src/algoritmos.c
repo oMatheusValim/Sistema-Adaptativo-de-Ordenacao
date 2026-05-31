@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "../include/algoritmos.h"
+#include "algoritmos.h"
 
 
 //função insertion 1 - faz e retorna nmr de comparações e número de movimentações.
@@ -250,52 +250,56 @@ metrics heapSort(int arr[], int n)
     return m;
 }
 
-metrics countingSort1(int arr[], int n)
-{
+metrics countingSort1(int arr[], int n){
+
     metrics m = {0};
+
+
     m.stability = 1;
 
-    if (n <= 1)
-    {
+    if (n <= 1){
         return m;
     }
+
     int menor = arr[0];
     int maior = arr[0];
-    for (int i = 0; i < n; i++)
-    {
-        if (arr[i] < menor)
-        {
+
+
+    for (int i = 0; i < n; i++){
+
+        if (arr[i] < menor){
             menor = arr[i];
         }
-        if ( arr[i] > maior)
-        {
+
+        if ( arr[i] > maior){
             maior = arr[i];
         }
+
         m.compare+=2;
     }
-    int *aux = (int *)calloc(maior - menor + 1, sizeof(int));
+
+    
+    int *aux = calloc(maior - menor + 1, sizeof(int));
     m.memory+=(maior - menor + 1)*(sizeof(int));
 
-    if (!aux)
-    {
-        printf("Alocation error");
+    if (aux == NULL){
+        printf("Alocation error\n");
         return m;
     }
+
     
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++){
         aux[arr[i]-menor]++;
         m.movements++;
     }
 
     int index = 0;
 
-    for (int i = 0; i < maior-menor + 1; i++)
-    {
-        while (aux[i] > 0)
-        {
+    for (int i = 0; i < maior-menor + 1; i++){
+        while (aux[i] > 0){
+
             arr[index++] = i + menor;
-            aux[index]--;
+            aux[i]--;
             m.movements++;
         } 
     }
@@ -303,12 +307,13 @@ metrics countingSort1(int arr[], int n)
     return m;
 }
 
-metrics countingSort(int arr[], int n)
-{
+metrics countingSort(int arr[], int n){
     clock_t inicio;
     metrics m = countingSort1(arr, n);
     clock_t fim;
+
     m.tempo = (double)(fim - inicio) / CLOCKS_PER_SEC;
+
     m.ordenado = arr;
     return m;
 }

@@ -5,7 +5,7 @@
 
 #include "entry_analysis.h"
 #include "io.h"
-#include "../include/algoritmos.h"
+#include "algoritmos.h"
 
 
 int main(){
@@ -20,6 +20,10 @@ int main(){
             ea = analyse_entry(lines[i]);
             metrics m = countingSort(ea.vector, ea.size);
             printf("Comp: %lld, Movements: %lld, time: %f ", m.compare, m.movements, m.tempo);
+
+            if (ea.vector != NULL)
+                free(ea.vector);
+                
             //printf("i:%d - dis:%f - n:%d\n", ea.index, ea.distr.disorder, ea.size);
     }
     
@@ -30,7 +34,6 @@ int main(){
     }
 
     free(lines);
-    free(ea.vector);
 
     return 0;
 }

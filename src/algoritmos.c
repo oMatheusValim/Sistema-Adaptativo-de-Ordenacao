@@ -4,6 +4,7 @@
 #include "algoritmos.h"
 
 
+
 //função insertion 1 - faz e retorna nmr de comparações e número de movimentações.
 metrics insertionSort1(int arr[], int n){
     
@@ -308,9 +309,9 @@ metrics countingSort1(int arr[], int n){
 }
 
 metrics countingSort(int arr[], int n){
-    clock_t inicio;
+    clock_t inicio = clock();
     metrics m = countingSort1(arr, n);
-    clock_t fim;
+    clock_t fim = clock();
 
     m.tempo = (double)(fim - inicio) / CLOCKS_PER_SEC;
 

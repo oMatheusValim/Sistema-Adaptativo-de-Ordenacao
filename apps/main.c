@@ -19,7 +19,7 @@ int main(){
         if (lines[i] != NULL)
             ea = analyse_entry(lines[i]);
             metrics m = countingSort(ea.vector, ea.size);
-            printf("Comp: %lld, Movements: %lld, time: %f ", m.compare, m.movements, m.tempo);
+            printf("Comp: %lld, Movements: %lld, time: %f \n", m.compare, m.movements, m.tempo);
 
             if (ea.vector != NULL)
                 free(ea.vector);

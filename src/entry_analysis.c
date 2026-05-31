@@ -12,7 +12,7 @@ int entry_index(char *line){
     return atoi(token);
 
 }
-
+//retorna o tamanho da entrada (número de colunas no csv)
 int entry_size(char *line){
     int i = 0;
     int num_colums_csv = 0;
@@ -30,7 +30,7 @@ int entry_size(char *line){
     return (num_colums_csv + 1);
 }
 
-
+// aloca o array a partir da linha do arquivo
 int *allocate_arr(char *line, int n, int index){
 
     // Alocacao do vetor de ints
@@ -54,7 +54,7 @@ int *allocate_arr(char *line, int n, int index){
     return arr;
 }
 
-
+// retorna a análise de amplitude do array
 amp_analysis entry_amp(int *arr, int n){
     amp_analysis amp;
 
@@ -77,7 +77,7 @@ amp_analysis entry_amp(int *arr, int n){
 
     return amp;
 }
-
+// retorna a aálise de dispersão do array
 dispersion_analysis entry_disp(int *arr, int n){
 
     float sum = 0.0;
@@ -110,7 +110,7 @@ dispersion_analysis entry_disp(int *arr, int n){
 
     return disp;            
 }
-
+//conta repetições do valor no array
 int count_uniques(int *arr, int n, amp_analysis amp){
     int offset = -1*amp.min;
     int count[amp.amp + 1];
@@ -230,10 +230,10 @@ entry_analysis analyse_entry(char *line){
     ea.index = entry_index(line);
     ea.size = entry_size(line);
 
-    int *vector = allocate_arr(line, ea.size, ea.index);
+    ea.vector = allocate_arr(line, ea.size, ea.index);
 
-    ea.amp = entry_amp(vector, ea.size);
-    ea.distr = entry_distr(vector, ea.size, ea.amp);
+    ea.amp = entry_amp(ea.vector, ea.size);
+    ea.distr = entry_distr(ea.vector, ea.size, ea.amp);
         
     return ea;
 }

@@ -5,10 +5,11 @@
 
 #include "entry_analysis.h"
 #include "io.h"
+#include "../include/algoritmos.h"
 
 
 int main(){
-
+    
     char **lines = read_data_input("output.csv", 60);
     entry_analysis ea;
 
@@ -17,8 +18,11 @@ int main(){
     for (i=1; i<60; i++){
         if (lines[i] != NULL)
             ea = analyse_entry(lines[i]);
-            printf("i:%d - dis:%f - n:%d\n", ea.index, ea.distr.disorder, ea.size);
+            metrics m = countingSort(ea.vector, ea.size);
+            printf("Comp: %lld, Movements: %lld, time: %f ", m.compare, m.movements, m.tempo);
+            //printf("i:%d - dis:%f - n:%d\n", ea.index, ea.distr.disorder, ea.size);
     }
+    
 
     for (i=0; i<60; i++){
         if (lines[i] != NULL)
@@ -26,6 +30,7 @@ int main(){
     }
 
     free(lines);
+    free(ea.vector);
 
     return 0;
 }

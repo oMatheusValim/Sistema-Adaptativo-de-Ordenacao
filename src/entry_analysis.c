@@ -187,13 +187,10 @@ entry_analysis analyse_entry(char *line){
     ea.size = entry_size(line);
     ea.index = entry_index(line);
 
-    int *vector = allocate_arr(line, ea.size, ea.index);
+    ea.vector = allocate_arr(line, ea.size, ea.index);
 
-    ea.amp = entry_amp(vector, ea.size);
-    ea.distr = entry_distr(vector, ea.size, ea.amp);
-    
-    if (vector != NULL)
-        free(vector);
+    ea.amp = entry_amp(ea.vector, ea.size);
+    ea.distr = entry_distr(ea.vector, ea.size, ea.amp);
+
     return ea;
 }
-

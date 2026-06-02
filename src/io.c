@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+
 #include "io.h"
+
 
 void write_csv(int **arrs, int quant, char* filename, int max_num){
     FILE *fptr;
@@ -36,11 +39,15 @@ void write_csv(int **arrs, int quant, char* filename, int max_num){
     fclose(fptr);
 }
 
-char **read_data_input(char* file_name, int rows){
+char **read_data_input(char* file_name, int quant, int max_num, int max_size){
 
     FILE *fptr;
-    char buffer[10010];
-    char **lines = (char **)malloc(rows * sizeof(char *));
+    int decimal_places = (int)log10(max_num);
+
+    int buffers_size = max_size*(decimal_places + 2);
+
+    char buffer[buffers_size];
+    char **lines = (char **)malloc(quant * sizeof(char *));
 
     if (lines == NULL){
         printf("Erro ao alocar memória para o csv");
@@ -56,7 +63,7 @@ char **read_data_input(char* file_name, int rows){
 
     int i = 0;
 
-    while (fgets(buffer, 10000, fptr) != NULL && i < rows) {
+    while (fgets(buffer, 1000000, fptr) != NULL && i < quant) {
         int length = strlen(buffer);
         lines[i] = malloc((length + 1) * sizeof(char));
         if (lines[i] != NULL) 

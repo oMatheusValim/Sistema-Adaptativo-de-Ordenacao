@@ -3,7 +3,6 @@
 #include <math.h>
 #include <string.h>
 
-
 typedef struct{
     int min;
     int min_idx;
@@ -28,6 +27,7 @@ typedef struct{
     int index;
     int size;
     amp_analysis amp;
+    int *vector;
     distribution_analysis distr;
 }entry_analysis;
 

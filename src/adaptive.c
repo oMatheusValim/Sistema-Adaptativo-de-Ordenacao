@@ -16,12 +16,6 @@ metrics decision_tree(entry_analysis ea, int max_size){
         return heapSort(ea.vector, ea.size);
     }
 
-    // Para entradas com muitos valores duplicados, use o heap_sort
-    if (ea.distr.duplicate_density > 0.85){
-        printf("i: %d, n: %d, metodo: HEAP2, ", ea.index, ea.size);
-        return heapSort(ea.vector, ea.size);
-    }
-
     // Para entradas quase ordenadas ...
     if (ea.distr.disorder < 0.3){
 

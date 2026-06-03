@@ -8,9 +8,9 @@
 #include "adaptive.h"
 
 
-#define QUANT 200
-#define MAX_NUM 1000
-#define MAX_SIZE 3200
+#define QUANT 500
+#define MAX_NUM 100000
+#define MAX_SIZE 2000
 
 int main(){
 
@@ -33,7 +33,7 @@ int main(){
     int count_s = 0;
 
 
-    /*
+    
     printf("Inicio da análise...\n");
     for (i=1; i<QUANT; i++){
         if (lines[i] != NULL){
@@ -83,7 +83,6 @@ int main(){
     }
 
     printf("STATS: c: %d, h: %d, i: %d, m: %d, s: %d\n", count_c, count_h, count_i, count_m, count_s);
-    */
 
     printf("Liberando memória ...\n");
     for (int i = 0; i<QUANT; i++){

@@ -39,7 +39,7 @@ metrics decision_tree(entry_analysis ea, int max_size){
     }
 
     // Caso nenhuma das condições anteriores for atendida, use o merge_sort
-    printf("i: %d, n: %d, metodo: HEAP3, ", ea.index, ea.size);
-    return heapSort(ea.vector, ea.size);
+    printf("i: %d, n: %d, metodo: MERGE, ", ea.index, ea.size);
+    return mergeSort(ea.vector, ea.size);
 
 }

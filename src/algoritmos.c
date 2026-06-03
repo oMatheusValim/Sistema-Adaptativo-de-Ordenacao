@@ -161,7 +161,7 @@ void mergeSortRec(int arr[], int inicio, int fim, metrics *m, int profundidade){
     {
         int meio = inicio + (fim - inicio)/ 2;
 
-        // Sort first and second halves
+        
         mergeSortRec(arr, inicio, meio, m, profundidade + 1);
         mergeSortRec(arr, meio + 1, fim, m, profundidade + 1);
 

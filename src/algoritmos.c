@@ -90,8 +90,14 @@ void merge(int arr[], int inicio, int meio, int fim, metrics *m){
     int n1 = meio - inicio + 1;
     int n2 = fim - meio;
 
-    int L[n1], R[n2];
+    int *L = malloc(n1 * sizeof(int));
+    int *R = malloc(n2 * sizeof(int));
 
+    if (m==NULL)
+    {
+        printf("Ponteiro Metrics é NULL");
+        exit(EXIT_FAILURE);
+    }
  
     for (i = 0; i < n1; i++)
     {
@@ -135,8 +141,10 @@ void merge(int arr[], int inicio, int meio, int fim, metrics *m){
         arr[k] = R[j];
         j++;
         k++;
-        m->movements;
+        m->movements++;
     }
+    free(L);
+    free(R);
 }
 
 
@@ -151,13 +159,13 @@ void mergeSortRec(int arr[], int inicio, int fim, metrics *m, int profundidade){
 
     if (inicio < fim) 
     {
-        int k = (inicio + (fim - inicio)) / 2;
+        int meio = inicio + (fim - inicio)/ 2;
 
         // Sort first and second halves
-        mergeSortRec(arr, inicio, k, m, profundidade + 1);
-        mergeSortRec(arr, k + 1, fim, m, profundidade + 1);
+        mergeSortRec(arr, inicio, meio, m, profundidade + 1);
+        mergeSortRec(arr, meio + 1, fim, m, profundidade + 1);
 
-        merge(arr, inicio, k, fim, m);
+        merge(arr, inicio, meio, fim, m);
     }
 }
 

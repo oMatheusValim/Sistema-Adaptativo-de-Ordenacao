@@ -33,10 +33,10 @@ int main(){
             //PARA TESTAR SÓ UM ALGORITMO, DESCOMENTE ELE ABAIXO E O PRINTF QUE COMEÇA COM COMP...
                 //metrics m = countingSort(ea.vector, ea.size);
                 //metrics m = heapSort(ea.vector, ea.size);
-                //metrics m = mergeSort(ea.vector, ea.size); //BUGADO!!!
+                metrics m = mergeSort(ea.vector, ea.size); //BUGADO!!!
                 //metrics m = selectionSort(ea.vector, ea.size);
                 //metrics m = insertionSort(ea.vector, ea.size);
-                //printf("Comp: %lld, Movements: %lld, time: %f \n", ea.index, ea.size, m.compare, m.movements, m.tempo);
+                printf("Index: %d, Size: %d, Comp: %lld, Movements: %lld, time: %f \n", ea.index, ea.size, m.compare, m.movements, m.tempo);
 
                 
             //PARA TESTAR A ÁRVORE DE DECISÃO, DESCOMENTE AS PRÓXIMAS 2 LINHAS DE CÓDIGO

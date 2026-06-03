@@ -42,6 +42,7 @@ metrics insertionSort(int arr[], int n)
     m.max_depth++;
     m.stability = 1;
     m.ordenado = arr;
+    m.metodo = 'i';
     return m;
 }
 
@@ -80,6 +81,7 @@ metrics selectionSort(int arr[], int n)
     
     m.stability = 0;
     m.ordenado = arr;
+    m.metodo = 's';
     return m;
 }
 
@@ -182,6 +184,7 @@ metrics mergeSort (int arr[], int n)
     m.tempo = (double)(fim - inicio)/ CLOCKS_PER_SEC;
     m.stability = 1;
     m.ordenado = arr;
+    m.metodo = 'm';
     return m;
 
 
@@ -255,6 +258,7 @@ metrics heapSort(int arr[], int n)
     
     m.stability = 0;
     m.ordenado = arr;
+    m.metodo = 'h';
     return m;
 }
 
@@ -323,6 +327,7 @@ metrics countingSort(int arr[], int n){
     m.tempo = (double)(fim - inicio) / CLOCKS_PER_SEC;
 
     m.ordenado = arr;
+    m.metodo = 'c';
     return m;
 }
 

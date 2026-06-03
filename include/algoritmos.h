@@ -12,6 +12,7 @@ typedef struct {
     int memory;
     int stability;
     int *ordenado;
+    char metodo;
 } metrics;
 
 metrics countingSort(int *vector, int size);

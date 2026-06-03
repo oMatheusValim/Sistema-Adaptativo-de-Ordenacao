@@ -8,8 +8,8 @@
 #include "adaptive.h"
 
 
-#define QUANT 4000
-#define MAX_NUM 10000
+#define QUANT 200
+#define MAX_NUM 1000
 #define MAX_SIZE 3200
 
 int main(){
@@ -25,8 +25,17 @@ int main(){
     entry_analysis ea = {0};
 
     int i = 1;
+
+    int count_c = 0;
+    int count_h = 0;
+    int count_i = 0;
+    int count_m = 0;
+    int count_s = 0;
+
+
+    /*
     printf("Inicio da análise...\n");
-    for (i=1; i<1000; i++){
+    for (i=1; i<QUANT; i++){
         if (lines[i] != NULL){
             ea = analyse_entry(lines[i]);
 
@@ -36,12 +45,35 @@ int main(){
                 //metrics m = mergeSort(ea.vector, ea.size);
                 //metrics m = selectionSort(ea.vector, ea.size);
                 //metrics m = insertionSort(ea.vector, ea.size);
-                printf("Index: %d, Size: %d, Comp: %lld, Movements: %lld, time: %f \n", ea.index, ea.size, m.compare, m.movements, m.tempo);
+                //printf("Index: %d, Size: %d, Comp: %lld, Movements: %lld, time: %f \n", ea.index, ea.size, m.compare, m.movements, m.tempo);
 
                 
             //PARA TESTAR A ÁRVORE DE DECISÃO, DESCOMENTE AS PRÓXIMAS 2 LINHAS DE CÓDIGO
                 metrics m = decision_tree(ea, MAX_SIZE);
                 printf("time: %f \n", m.tempo);
+
+            
+            switch (m.metodo){
+                case 'c':
+                    count_c++;
+                    break;
+                
+                case 'h':
+                    count_h++;
+                    break;
+
+                case 'i':
+                    count_i++;
+                    break;
+
+                case 'm':
+                    count_m++;
+                    break;
+
+                case 's':
+                    count_s++;
+                    break;
+            }
             
             if (ea.vector != NULL){
                 free(ea.vector);
@@ -49,6 +81,9 @@ int main(){
  
         }
     }
+
+    printf("STATS: c: %d, h: %d, i: %d, m: %d, s: %d\n", count_c, count_h, count_i, count_m, count_s);
+    */
 
     printf("Liberando memória ...\n");
     for (int i = 0; i<QUANT; i++){

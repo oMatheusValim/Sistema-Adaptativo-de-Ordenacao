@@ -4,7 +4,6 @@
 #include "algoritmos.h"
 
 
-
 //função insertion 1 - faz e retorna nmr de comparações e número de movimentações.
 metrics insertionSort1(int arr[], int n){
     

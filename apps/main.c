@@ -3,22 +3,21 @@
 #include <string.h>
 #include <math.h>
 
-#include "entry_analysis.h"
 #include "input_generator.h"
 #include "io.h"
-#include "algoritmos.h"
+#include "adaptive.h"
 
 
 #define QUANT 4000
-#define MAX_NUM 1000
-#define MAX_SIZE 3500
+#define MAX_NUM 10000
+#define MAX_SIZE 3200
 
 int main(){
 
     printf("Gerando os dados aleatoriamente ...\n");
     int **arrs = create_arrs(QUANT, MAX_SIZE, MAX_NUM);
 
-    printf("Colocando os dados no csv\n");
+    printf("Colocando os dados no csv ...\n");
     write_csv(arrs, QUANT, "entrada.csv", MAX_NUM);
 
     printf("Lendo os dados do csv...\n");
@@ -30,8 +29,15 @@ int main(){
     for (i=1; i<1000; i++){
         if (lines[i] != NULL){
             ea = analyse_entry(lines[i]);
-            metrics m = countingSort(ea.vector, ea.size);
-            printf("i: %d, n: %d, Comp: %lld, Movements: %lld, time: %f \n", ea.index, ea.size, m.compare, m.movements, m.tempo);
+            //metrics m = countingSort(ea.vector, ea.size);
+            //metrics m = heapSort(ea.vector, ea.size);
+            //metrics m = mergeSort(ea.vector, ea.size); //BUGADO!!!
+            //metrics m = selectionSort(ea.vector, ea.size);
+            //metrics m = insertionSort(ea.vector, ea.size);
+
+            metrics m = decision_tree(ea, MAX_SIZE);
+
+            printf("time: %f \n", m.tempo);
             
             if (ea.vector != NULL){
                 free(ea.vector);
@@ -40,7 +46,7 @@ int main(){
         }
     }
 
-    printf("Liberando memória...\n");
+    printf("Liberando memória ...\n");
     for (int i = 0; i<QUANT; i++){
         if (lines[i] != NULL)
             free(lines[i]);
@@ -52,7 +58,7 @@ int main(){
     free(arrs);
     free(lines);
 
-    printf("Fim da execução ...\n");
+    printf("Fim da execução\n");
 
     return 0;
 }

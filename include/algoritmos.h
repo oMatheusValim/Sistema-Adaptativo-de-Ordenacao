@@ -18,6 +18,7 @@ metrics countingSort(int *vector, int size);
 metrics insertionSort1(int arr[], int n);
 metrics insertionSort(int arr[], int n);
 metrics selectionSort1(int arr[], int n);
+metrics selectionSort(int arr[], int n);
 void merge(int arr[], int inicio, int meio, int fim, metrics *m);
 void mergeSortRec(int arr[], int inicio, int fim, metrics *m, int profundidade);
 metrics mergeSort (int arr[], int n);

@@ -194,3 +194,20 @@ entry_analysis analyse_entry(char *line){
 
     return ea;
 }
+
+int *copy_vector (int *arr, int n){
+    
+    int *desordem =  malloc(n * sizeof(int));
+    if (desordem == NULL)
+    {
+        printf("Erro na alocação de memória para o vetor desordenado\n");
+        return NULL;
+    }
+    for (int i =0; i < n; i++)
+    {
+        desordem[i]=arr[i];
+    }
+
+    return desordem;
+}
+

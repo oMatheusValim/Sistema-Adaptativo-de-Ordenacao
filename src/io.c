@@ -73,7 +73,6 @@ char **read_data_input(char* file_name, int quant, int max_num, int max_size){
     //while (fgets(buffer, 1000000, fptr) != NULL && i < quant) 
     while (fgets(buffer, buffers_size, fptr) != NULL && i < quant){
         int length = strlen(buffer);
-        printf("%d\n", length);
         lines[i] = malloc((length + 1) * sizeof(char));
         if (lines[i]==NULL){
             printf("Erro na alocação de memória\n");

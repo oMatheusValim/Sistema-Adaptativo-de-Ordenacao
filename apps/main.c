@@ -9,8 +9,8 @@
 
 
 #define QUANT 500
-#define MAX_NUM 50000
-#define MAX_SIZE 2000
+#define MAX_NUM 100000
+#define MAX_SIZE 8000
 
 int main(){
 

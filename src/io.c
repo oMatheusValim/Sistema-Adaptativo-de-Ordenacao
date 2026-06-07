@@ -42,20 +42,22 @@ void write_csv(int **arrs, int quant, char* filename, int max_num){
 char **read_data_input(char* file_name, int quant, int max_num, int max_size){
 
     FILE *fptr;
-    int decimal_places = (int)log10(max_num);
+    int decimal_places = (int)log10(max_num) + 1;
 
-    int buffers_size = max_size*(decimal_places + 2);
+    int buffers_size = max_size*(decimal_places + 1) + 2;
 
     char buffer[buffers_size];
+  
     char **lines = (char **)malloc(quant * sizeof(char *));
 
     if (lines == NULL){
         printf("Erro ao alocar memória para o csv");
         return NULL;
     }
+   
 
     fptr = fopen(file_name, "r");
-
+  
     if (fptr == NULL) {
         printf("Erro ao abrir o arquivo\n");
         return NULL;
@@ -63,9 +65,14 @@ char **read_data_input(char* file_name, int quant, int max_num, int max_size){
 
     int i = 0;
 
-    while (fgets(buffer, 1000000, fptr) != NULL && i < quant) {
+    //while (fgets(buffer, 1000000, fptr) != NULL && i < quant) 
+    while (fgets(buffer, buffers_size, fptr) != NULL && i < quant){
         int length = strlen(buffer);
+        print("%d\n", length);
         lines[i] = malloc((length + 1) * sizeof(char));
+        if (lines[i]==NULL){
+            printf("Erro na alocação de memória\n");
+        }
         if (lines[i] != NULL) 
             strcpy(lines[i], buffer);
 

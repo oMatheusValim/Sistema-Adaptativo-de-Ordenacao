@@ -38,9 +38,14 @@ int main(){
     printf("Inicio da análise...\n");
     for (i=1; i<QUANT; i++){
         if (lines[i] != NULL){
+            int arr_size = entry_size(lines[i]);
             ea = analyse_entry(lines[i]);
-            int *desordem = copy_vector(lines[i]);
-            //for (int j = 0; j < entry_size(lines[i]); j++)
+            int arr_index = entry_index(lines[i]);
+            int *arr = allocate_arr(lines[i], arr_size, arr_index);
+
+            int *desordem = copy_vector(arr, arr_size);
+
+            //for (int j = 1; j < entry_size(lines[i]); j++)
             //{
                 //printf("%d ", desordem[j]);
             //}

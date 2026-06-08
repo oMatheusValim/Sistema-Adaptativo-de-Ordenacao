@@ -290,7 +290,7 @@ metrics countingSort1(int arr[], int n){
         m.compare+=2;
     }
 
-    
+    printf("DEBUG: Menor = %d | Maior = %d\n", menor, maior);
     int *aux = calloc(maior - menor + 1, sizeof(int));
     m.memory+=(maior - menor + 1)*(sizeof(int));
 

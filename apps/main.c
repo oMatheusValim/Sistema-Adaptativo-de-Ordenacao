@@ -1,102 +1,183 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
+#include <stdbool.h>
+#include <time.h>
+#include "../include/input_generator.h"
+#include "../include/io.h"
+#include "../include/adaptive.h"
+#include "../include/algoritmos.h"
 
-#include "input_generator.h"
-#include "io.h"
-#include "adaptive.h"
+// Constantes baseadas no seu código original
+#define MAX_NUM 50000
+#define MAX_SIZE 50000
+#define QUANT_ARQUIVO 500
 
+int main(int argc, char *argv[]) {
+    // 1. Variáveis de Configuração CLI
+    bool modo_adaptativo = false;
+    char algoritmo[20] = "";
+    int tamanho = 0; 
+    char input_file[256] = "";
+    char tipo[30] = "aleatorio";
+    int seed = 42; 
+    char output_file[256] = "";
+    bool verbose = false;
 
-#define QUANT 500
-#define MAX_NUM 100000
-#define MAX_SIZE 8000
-
-int main(){
-
-    printf("Gerando os dados aleatoriamente ...\n");
-    int **arrs = create_arrs(QUANT, MAX_SIZE, MAX_NUM);
-
-    printf("Colocando os dados no csv ...\n");
-    write_csv(arrs, QUANT, "entrada.csv", MAX_NUM);
-
-    printf("Lendo os dados do csv...\n");
-    char **lines = read_data_input("entrada.csv", QUANT, MAX_NUM, MAX_SIZE);
-    entry_analysis ea = {0};
-
-    int i = 1;
-
-    int count_c = 0;
-    int count_h = 0;
-    int count_i = 0;
-    int count_m = 0;
-    int count_s = 0;
-
-
-    
-    printf("Inicio da análise...\n");
-    for (i=1; i<QUANT; i++){
-        if (lines[i] != NULL){
-            ea = analyse_entry(lines[i]);
-
-            //PARA TESTAR SÓ UM ALGORITMO, DESCOMENTE ELE ABAIXO E O PRINTF QUE COMEÇA COM COMP...
-                //metrics m = countingSort(ea.vector, ea.size);
-                //metrics m = heapSort(ea.vector, ea.size);
-                //metrics m = mergeSort(ea.vector, ea.size);
-                //metrics m = selectionSort(ea.vector, ea.size);
-                //metrics m = insertionSort(ea.vector, ea.size);
-                //printf("Index: %d, Size: %d, Comp: %lld, Movements: %lld, time: %f \n", ea.index, ea.size, m.compare, m.movements, m.tempo);
-
-                
-            //PARA TESTAR A ÁRVORE DE DECISÃO, DESCOMENTE AS PRÓXIMAS 2 LINHAS DE CÓDIGO
-                metrics m = decision_tree(ea, MAX_SIZE);
-                printf("time: %f \n", m.tempo);
-
-            
-            switch (m.metodo){
-                case 'c':
-                    count_c++;
-                    break;
-                
-                case 'h':
-                    count_h++;
-                    break;
-
-                case 'i':
-                    count_i++;
-                    break;
-
-                case 'm':
-                    count_m++;
-                    break;
-
-                case 's':
-                    count_s++;
-                    break;
-            }
-            
-            if (ea.vector != NULL){
-                free(ea.vector);
-            }
- 
+    // 2. Leitura dos Argumentos
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--modo") == 0 && i + 1 < argc) {
+            if (strcmp(argv[i+1], "adaptativo") == 0) modo_adaptativo = true;
+            i++;
+        } else if (strcmp(argv[i], "--algoritmo") == 0 && i + 1 < argc) {
+            strcpy(algoritmo, argv[i+1]);
+            i++;
+        } else if (strcmp(argv[i], "--tamanho") == 0 && i + 1 < argc) {
+            tamanho = atoi(argv[i+1]);
+            i++;
+        } else if (strcmp(argv[i], "--input") == 0 && i + 1 < argc) {
+            strcpy(input_file, argv[i+1]);
+            i++;
+        } else if (strcmp(argv[i], "--tipo") == 0 && i + 1 < argc) {
+            strcpy(tipo, argv[i+1]);
+            i++;
+        } else if (strcmp(argv[i], "--seed") == 0 && i + 1 < argc) {
+            seed = atoi(argv[i+1]);
+            i++;
+        } else if (strcmp(argv[i], "--output") == 0 && i + 1 < argc) {
+            strcpy(output_file, argv[i+1]);
+            i++;
+        } else if (strcmp(argv[i], "--verbose") == 0) {
+            verbose = true;
         }
     }
 
-    printf("STATS: c: %d, h: %d, i: %d, m: %d, s: %d\n", count_c, count_h, count_i, count_m, count_s);
+    srand(seed);
 
-    printf("Liberando memória ...\n");
-    for (int i = 0; i<QUANT; i++){
-        if (lines[i] != NULL)
-            free(lines[i]);
-
-        if (arrs[i] != NULL)
-            free(arrs[i]);
+    if (verbose) {
+        printf("=== Configurações da Execução ===\n");
+        printf("Modo Adaptativo: %s\n", modo_adaptativo ? "ON" : "OFF");
+        if (!modo_adaptativo) printf("Algoritmo Fixo: %s\n", algoritmo);
+        if (tamanho > 0) printf("Tamanho gerado: %d (Tipo: %s)\n", tamanho, tipo);
+        if (strlen(input_file) > 0) printf("Arquivo de Input: %s\n", input_file);
+        printf("Seed: %d\n=================================\n\n", seed);
     }
 
-    free(arrs);
-    free(lines);
+    // 3. Execução baseada na Entrada de Dados
+    metrics m = {0}; // Inicializa a struct de métricas
 
-    printf("Fim da execução\n");
+    if (strlen(input_file) > 0) {
+        // FLUXO 1: Lendo de um arquivo (como no seu código original)
+        if (verbose) printf("Lendo dados do arquivo %s...\n", input_file);
+        
+        char **lines = read_data_input(input_file, QUANT_ARQUIVO, MAX_NUM, MAX_SIZE);
+        int contagens[5] = {0}; // c, h, i, m, s
 
+        if (lines == NULL) {
+            printf("ERRO: Falha ao carregar os dados de %s. Encerrando execução.\n", input_file);
+        return 1;
+        }
+
+        for (int i = 1; i < QUANT_ARQUIVO; i++) {
+            if (lines[i] != NULL) {
+                entry_analysis ea = analyse_entry(lines[i]);
+
+                if (modo_adaptativo) {
+                    m = decision_tree(ea, MAX_SIZE);
+                } else {
+                    if (strcmp(algoritmo, "merge") == 0) m = mergeSort(ea.vector, ea.size);
+                    else if (strcmp(algoritmo, "heap") == 0) m = heapSort(ea.vector, ea.size);
+                    else if (strcmp(algoritmo, "selection") == 0) m = selectionSort(ea.vector, ea.size);
+                    else if (strcmp(algoritmo, "insertion") == 0) m = insertionSort(ea.vector, ea.size);
+                    else if (strcmp(algoritmo, "counting") == 0) m = countingSort(ea.vector, ea.size);
+                }
+
+                if (verbose) {
+                    printf("Linha %d | Tamanho: %d | Tempo: %f | Algoritmo usado: %c\n", i, ea.size, m.tempo, m.metodo);
+                }
+
+                // Estatísticas do adaptativo
+                switch (m.metodo) {
+                    case 'c': contagens[0]++; break;
+                    case 'h': contagens[1]++; break;
+                    case 'i': contagens[2]++; break;
+                    case 'm': contagens[3]++; break;
+                    case 's': contagens[4]++; break;
+                }
+
+                if (ea.vector != NULL) free(ea.vector);
+            }
+        }
+        
+        if (modo_adaptativo) {
+            printf("\n--- ESTATÍSTICAS DA ÁRVORE ---\n");
+            printf("Counting: %d | Heap: %d | Insertion: %d | Merge: %d | Selection: %d\n", 
+                   contagens[0], contagens[1], contagens[2], contagens[3], contagens[4]);
+        }
+
+        // Liberação de memória das linhas
+        for (int i = 0; i < QUANT_ARQUIVO; i++) {
+            if (lines[i] != NULL) free(lines[i]);
+        }
+        free(lines);
+
+    } else if (tamanho > 0) {
+        // FLUXO 2: Gerando um array único dinamicamente
+        int *dados = NULL;
+        
+        if (strcmp(tipo, "aleatorio") == 0) dados = random_arr(MAX_NUM, tamanho);
+        else if (strcmp(tipo, "quase_ordenado") == 0) dados = random_adversarial_arr(MAX_NUM, tamanho);
+        else if (strcmp(tipo, "reverso") == 0) dados = random_reverse_arr(MAX_NUM, tamanho);
+        else if (strcmp(tipo, "repetidos") == 0) dados = random_equal_arr(MAX_NUM, tamanho);
+
+        if (dados != NULL) {
+            if (verbose) printf("Iniciando ordenação do array de tamanho %d...\n", tamanho);
+
+            if (modo_adaptativo) {
+                // Mockando a entry_analysis para a árvore de decisão funcionar
+                entry_analysis ea;
+                ea.vector = dados;
+                ea.size = tamanho;
+                ea.index = 1;
+                m = decision_tree(ea, tamanho);
+            } else {
+                if (strcmp(algoritmo, "insertion") == 0) m = insertionSort(dados, tamanho);
+                else if (strcmp(algoritmo, "selection") == 0) m = selectionSort(dados, tamanho);
+                else if (strcmp(algoritmo, "merge") == 0) m = mergeSort(dados, tamanho);
+                else if (strcmp(algoritmo, "counting") == 0) m = countingSort(dados, tamanho);
+                else if (strcmp(algoritmo, "heap") == 0) m = heapSort(dados, tamanho);
+            }
+
+            printf("\n--- RESULTADO ---\n");
+            printf("Algoritmo executado: %c\n", m.metodo);
+            printf("Tempo de execução: %f segundos\n", m.tempo);
+            
+            // Caso sua struct metrics tenha essas variáveis, descomente:
+            // printf("Comparações: %lld\n", m.compare);
+            // printf("Movimentações: %lld\n", m.movements);
+
+            free(dados);
+        }
+
+    } else {
+        printf("ERRO: É obrigatório informar um arquivo (--input) ou um tamanho para gerar (--tamanho).\n");
+        printf("Exemplo: ./programa --modo adaptativo --input entrada.csv\n");
+        return 1;
+    }
+
+    // 4. Output em CSV das Métricas (se solicitado)
+    if (strlen(output_file) > 0) {
+        FILE *f = fopen(output_file, "a");
+        if (f) {
+            // Salvando um append básico das métricas no CSV
+            fprintf(f, "%c,%d,%f\n", m.metodo, tamanho, m.tempo);
+            fclose(f);
+            if (verbose) printf("Métricas salvas em %s\n", output_file);
+        } else {
+            printf("Erro ao criar o arquivo de output %s\n", output_file);
+        }
+    }
+
+    if (verbose) printf("\nExecução finalizada com sucesso.\n");
     return 0;
 }

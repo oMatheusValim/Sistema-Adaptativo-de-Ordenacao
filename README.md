@@ -48,28 +48,27 @@ O objetivo central não é apenas implementar os algoritmos, mas investigar seu 
 
 ```
 .
+├── apps/
+│   └── main.c                  # Ponto de entrada e parsing de argumentos 
+├── include/
+│   ├── adaptive.h              # Lógica do sistema adaptativo
+│   ├── algoritmos.h 
+│   ├── entry_analysis.h
+│   ├── execution_analysis.h
+│   └── input_generator.h       # Coleta de métricas de execução
 ├── src/
-│   ├── main.c                  # Ponto de entrada e parsing de argumentos
-│   ├── adaptive.c / .h         # Lógica do sistema adaptativo
-│   ├── characterizer.c / .h    # Análise de características da entrada
-│   ├── metrics.c / .h          # Coleta de métricas de execução
-│   ├── algorithms/
-│   │   ├── insertion_sort.c
-│   │   ├── selection_sort.c
-│   │   ├── merge_sort.c
-│   │   ├── quick_sort.c
-│   │   └── counting_sort.c
-│   └── utils/
-│       ├── input_generator.c   # Gerador de entradas para experimentos
-│       └── io.c                # Leitura/escrita de arquivos
-├── experiments/
-│   ├── run_all.sh              # Script de execução automatizada
-│   └── datasets/               # Entradas geradas para os experimentos
-├── results/                    # Saída dos experimentos (CSVs, logs)
+│   ├── adaptive.c
+│   ├── algoritmos.c
+│   ├── entry_analysis.c
+│   ├── execution_analysis.c
+│   ├── input_generator.c
+│   └── io.c     
 ├── report/                     # Relatório em PDF
+├── entrada.csv
 ├── instruções.pdf              # Instruções para a realização do projeto
 ├── Makefile
-└── README.md
+├── README.md
+└── resultados.csv
 ```
 
 ---
@@ -98,36 +97,62 @@ make clean
 
 ---
 
+Para deixar o seu `README.md` perfeitamente alinhado com a ferramenta profissional de linha de comando (CLI) que acabamos de construir, o ideal é padronizar o nome do executável (`./bin/run.exe`), adicionar os exemplos com as novas *flags* (como `--verbose` e `--tipo`) e listar todos os parâmetros disponíveis de forma clara.
+
+Aqui está o formato ideal que você pode copiar e colar direto no seu `README.md`:
+
 ## Execução
 
-O sistema aceita parâmetros por linha de comando.
+O sistema foi construído para ser executado via linha de comando (CLI), permitindo alta flexibilidade na escolha de entradas, geração de dados e exportação de métricas.
 
-### Modo adaptativo com arquivo de entrada
+O executável gerado pelo `make` fica na pasta `bin`. Para rodar, utilize:
 
+### 1. Modo Adaptativo (Árvore de Decisão)
+
+Lendo um lote de dados de um arquivo CSV existente:
 ```bash
-./programa --modo adaptativo --input dados.txt
+./bin/run.exe --modo adaptativo --input entrada.csv --verbose
+
 ```
 
-### Modo fixo (algoritmo específico)
+Gerando um vetor de tamanho específico na hora:
 
 ```bash
-./programa --algoritmo quick --tamanho 10000
-./programa --algoritmo merge --input dados.txt
-./programa --algoritmo heap  --tamanho 50000
+./bin/run.exe --modo adaptativo --tamanho 50000 --tipo quase_ordenado --verbose
+
 ```
 
-### Parâmetros disponíveis
+### 2. Modo Fixo (Algoritmo Específico)
 
-| Parâmetro | Descrição |
-|-----------|-----------|
-| `--modo adaptativo` | Ativa o sistema adaptativo |
-| `--algoritmo <nome>` | Força um algoritmo específico (`insertion`, `selection`, `merge`, `heap`, `counting`) |
-| `--tamanho <n>` | Gera uma entrada aleatória de tamanho `n` |
-| `--input <arquivo>` | Lê a entrada a partir de um arquivo |
-| `--tipo <tipo>` | Define o tipo da entrada gerada: `aleatorio`, `quase_ordenado`, `reverso`, `repetidos` |
-| `--seed <valor>` | Define a semente para reprodutibilidade |
-| `--output <arquivo>` | Redireciona as métricas para um arquivo CSV |
-| `--verbose` | Exibe métricas detalhadas no terminal |
+Testando um algoritmo com geração de dados aleatórios ou específicos:
+
+```bash
+./bin/run.exe --algoritmo insertion --tamanho 100000 --tipo reverso --verbose
+./bin/run.exe --algoritmo heap --tamanho 50000 --tipo aleatorio --seed 99
+
+```
+
+Lendo um lote de dados e forçando um único algoritmo para todas as linhas:
+
+```bash
+./bin/run.exe --algoritmo merge --input entrada.csv --output resultados.csv
+
+```
+
+## Parâmetros Disponíveis
+
+O sistema exige que você forneça **ou** um arquivo de entrada (`--input`) **ou** um tamanho para gerar os dados (`--tamanho`).
+
+| Parâmetro | Descrição | Valores Aceitos / Exemplos |
+| --- | --- | --- |
+| `--modo adaptativo` | Ativa a árvore de decisão para escolher o melhor algoritmo automaticamente. | (Uso isolado) |
+| `--algoritmo <nome>` | Força a execução de um algoritmo específico de ordenação. | `quick`, `merge`, `heap`, `selection`, `insertion`, `counting` |
+| `--tamanho <n>` | Gera um array dinamicamente com `n` elementos. | Ex: `10000`, `50000` |
+| `--input <arquivo>` | Lê lotes de dados a partir de um arquivo de texto/csv. | Ex: `entrada.csv` |
+| `--tipo <tipo>` | Define a distribuição matemática dos dados gerados pelo `--tamanho`. | `aleatorio`, `quase_ordenado`, `reverso`, `repetidos` |
+| `--seed <valor>` | Define a semente de aleatoriedade para reprodutibilidade dos testes. | Ex: `42`, `99` (Padrão: 42) |
+| `--output <arquivo>` | Redireciona as métricas (algoritmo usado, tamanho, tempo) para um CSV. | Ex: `resultados.csv` |
+| `--verbose` | Habilita a exibição detalhada de logs e métricas no terminal. | (Uso isolado) |
 
 ---
 

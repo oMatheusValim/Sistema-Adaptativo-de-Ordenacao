@@ -5,14 +5,11 @@
 
 #include "io.h"
 
-
-void write_csv(int **arrs, int quant, char* filename, int max_num){
-    FILE *fptr;
-
-    fptr = fopen(filename, "w");
+void write_csv(int **arrs, int quant, char* filename, int max_num, int max_size){
+    FILE *fptr = fopen(filename, "w");
 
     if (fptr == NULL) {
-        printf("Erro ao abrir o arquivo de entrada\n");
+        printf("Erro ao abrir o arquivo de entrada para escrita\n");
         return;
     }
 
@@ -20,19 +17,14 @@ void write_csv(int **arrs, int quant, char* filename, int max_num){
     for (int i = 0; i < quant; i++){
         fprintf(fptr, "%d,", i);
 
-        int j = 0;
-        int size = sizeof(arrs[i]) / sizeof(arrs[i][0]);
-
-        while(arrs[i][j] <= max_num){
-            if (arrs[i][j+1] <= max_num)
+        // Como removemos o código de parada (max_num + 10) antes,
+        // agora iteramos usando o max_size exato para não ler lixo
+        for (int j = 0; j < max_size; j++) {
+            if (j < max_size - 1) {
                 fprintf(fptr, "%d,", arrs[i][j]);
-
-            else{
+            } else {
                 fprintf(fptr, "%d\n", arrs[i][j]);
-                break;
             }
-
-            j++;
         }
     }
 
@@ -41,19 +33,16 @@ void write_csv(int **arrs, int quant, char* filename, int max_num){
 
 char **read_data_input(char* file_name, int quant, int max_num, int max_size){
 
-    FILE *fptr;
-    char *buffer = NULL;
-    size_t buffer_size = 0;
-    ssize_t length;
+    FILE *fptr = fopen(file_name, "r");
+    if (fptr == NULL) {
+        printf("Erro: O arquivo '%s' não foi encontrado ou não pode ser lido.\n", file_name);
+        return NULL;
+    }
 
-    int buffers_size = max_size*(decimal_places + 1) + 210;
-
-    char buffer[buffers_size];
-  
     char **lines = (char **)malloc(quant * sizeof(char *));
-
     if (lines == NULL){
-        printf("Erro ao alocar memória para o csv\n");
+        printf("Erro ao alocar memória para a matriz do csv\n");
+        fclose(fptr);
         return NULL;
     }
 
@@ -61,27 +50,16 @@ char **read_data_input(char* file_name, int quant, int max_num, int max_size){
         lines[j] = NULL;
     }
 
-    fptr = fopen(file_name, "r");
-    if (fptr == NULL) {
-        printf("Erro ao abrir o arquivo\n");
-        free(lines);
-        return NULL;
-    }
-
+    char *buffer = NULL;
+    size_t buffer_size = 0;
+    ssize_t length;
     int i = 0;
 
-    //while (fgets(buffer, 1000000, fptr) != NULL && i < quant) 
-    while (fgets(buffer, buffers_size, fptr) != NULL && i < quant){
-        int length = strlen(buffer);
-        printf("%d\n", length);
-        lines[i] = malloc((length + 1) * sizeof(char));
-        if (lines[i]==NULL){
-            printf("Erro na alocação de memória\n");
-        }
-
-        lines[i] = malloc((size_t)length + 1);
+    while ((length = getline(&buffer, &buffer_size, fptr)) != -1 && i < quant) {
+        lines[i] = (char *)malloc((length + 1) * sizeof(char));
+        
         if (lines[i] == NULL){
-            printf("Erro na alocação de memória\n");
+            printf("Erro na alocação de memória para a linha %d\n", i);
             break;
         }
 

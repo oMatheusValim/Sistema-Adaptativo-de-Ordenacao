@@ -40,10 +40,10 @@ int main(){
         if (lines[i] != NULL){
             ea = analyse_entry(lines[i]);
             int *desordem = copy_vector(lines[i]);
-            for (int j = 0; j < entry_size(lines[i]); j++)
-            {
-                printf("%d ", desordem[j]);
-            }
+            //for (int j = 0; j < entry_size(lines[i]); j++)
+            //{
+                //printf("%d ", desordem[j]);
+            //}
 printf("\n");
 
             //PARA TESTAR SÓ UM ALGORITMO, DESCOMENTE ELE ABAIXO E O PRINTF QUE COMEÇA COM COMP...

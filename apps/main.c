@@ -10,12 +10,14 @@
 
 #define QUANT 500
 #define MAX_NUM 100000
-#define MAX_SIZE 2000
+#define MAX_SIZE 8000
 
 int main(){
 
     printf("Gerando os dados aleatoriamente ...\n");
     int **arrs = create_arrs(QUANT, MAX_SIZE, MAX_NUM);
+    
+    int *desordem = copy_vector(*arrs, QUANT);
 
     printf("Colocando os dados no csv ...\n");
     write_csv(arrs, QUANT, "entrada.csv", MAX_NUM);

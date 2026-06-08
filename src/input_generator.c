@@ -79,6 +79,10 @@ int *random_arr(int max_num, int max_size){
         int min_n = max_size * n_range/5;
         int max_n = max_size * (n_range+1)/5;
 
+        if (min_n == 0){
+            min_n = 1;
+        }
+
         int n = random_int(min_n, max_n+1);
 
     // Aloca o vetor com uma posicao a mais para o codigo de parada
@@ -240,6 +244,10 @@ int *random_reverse_arr(int max_num, int max_size){
         int min_n = max_size * n_range/5;
         int max_n = max_size * (n_range+1)/5;
 
+        if (min_n == 0){
+            min_n = 1;
+        }
+
         int n = random_int(min_n, max_n+1);
 
     // Aloca o vetor com uma posição a mais para o código de parada
@@ -331,6 +339,10 @@ int *random_equal_arr(int max_num, int max_size){
 
         int min_n = max_size * n_range/5;
         int max_n = max_size * (n_range+1)/5;
+
+        if (min_n == 0){
+            min_n = 1;
+        }
 
         int n = random_int(min_n, max_n+1);
 

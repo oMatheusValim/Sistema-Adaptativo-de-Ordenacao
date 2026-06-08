@@ -42,9 +42,11 @@ void write_csv(int **arrs, int quant, char* filename, int max_num){
 char **read_data_input(char* file_name, int quant, int max_num, int max_size){
 
     FILE *fptr;
-    char *buffer = NULL;
+    //char *buffer = NULL;
     size_t buffer_size = 0;
     ssize_t length;
+
+    int decimal_places = (int)log10(max_num) + 1;
 
     int buffers_size = max_size*(decimal_places + 1) + 210;
 
@@ -88,7 +90,7 @@ char **read_data_input(char* file_name, int quant, int max_num, int max_size){
         i++;
     }
 
-    free(buffer);
+    //free(buffer);
     fclose(fptr);
 
     return lines;

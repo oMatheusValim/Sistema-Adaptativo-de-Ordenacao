@@ -32,7 +32,8 @@ typedef struct{
 }entry_analysis;
 
 entry_analysis analyse_entry(char *line);
+int entry_size(char *line);
 
-int *copy_vector (int *arr, int n);
+int *copy_vector (char *str);
 
 

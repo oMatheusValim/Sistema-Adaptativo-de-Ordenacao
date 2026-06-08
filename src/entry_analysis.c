@@ -195,18 +195,20 @@ entry_analysis analyse_entry(char *line){
     return ea;
 }
 
-int *copy_vector (int *arr, int n){
+int *copy_vector (char *str){
     
-    int *desordem =  malloc(n * sizeof(int));
+    int arr_size = entry_size(str);
+    int *desordem =  malloc(arr_size * sizeof(int));
+
     if (desordem == NULL)
     {
         printf("Erro na alocação de memória para o vetor desordenado\n");
         return NULL;
     }
-    for (int i =0; i < n; i++)
-    {
-        desordem[i]=arr[i];
-    }
+
+    int index = entry_index(str);
+    desordem = allocate_arr(str, arr_size, index);
+    
 
     return desordem;
 }

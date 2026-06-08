@@ -9,15 +9,14 @@
 
 
 #define QUANT 500
-#define MAX_NUM 100000
-#define MAX_SIZE 8000
+#define MAX_NUM 5000
+#define MAX_SIZE 1000
 
 int main(){
 
     printf("Gerando os dados aleatoriamente ...\n");
     int **arrs = create_arrs(QUANT, MAX_SIZE, MAX_NUM);
     
-    int *desordem = copy_vector(*arrs, QUANT);
 
     printf("Colocando os dados no csv ...\n");
     write_csv(arrs, QUANT, "entrada.csv", MAX_NUM);
@@ -40,6 +39,12 @@ int main(){
     for (i=1; i<QUANT; i++){
         if (lines[i] != NULL){
             ea = analyse_entry(lines[i]);
+            int *desordem = copy_vector(lines[i]);
+            for (int j = 0; j < entry_size(lines[i]); j++)
+            {
+                printf("%d ", desordem[j]);
+            }
+printf("\n");
 
             //PARA TESTAR SÓ UM ALGORITMO, DESCOMENTE ELE ABAIXO E O PRINTF QUE COMEÇA COM COMP...
                 //metrics m = countingSort(ea.vector, ea.size);
@@ -52,13 +57,13 @@ int main(){
                 
             //PARA TESTAR A ÁRVORE DE DECISÃO, DESCOMENTE AS PRÓXIMAS 2 LINHAS DE CÓDIGO
                 metrics m = decision_tree(ea, MAX_SIZE);
-                printf("time: %f \n", m.tempo);
+                //printf("time: %f \n", m.tempo);
 
             
             switch (m.metodo){
                 case 'c':
-                    count_c++;
-                    break;
+                    //count_c++;
+                    //break;
                 
                 case 'h':
                     count_h++;
@@ -80,13 +85,13 @@ int main(){
             if (ea.vector != NULL){
                 free(ea.vector);
             }
- 
+            free(desordem);
         }
     }
 
-    printf("STATS: c: %d, h: %d, i: %d, m: %d, s: %d\n", count_c, count_h, count_i, count_m, count_s);
+    //printf("STATS: c: %d, h: %d, i: %d, m: %d, s: %d\n", count_c, count_h, count_i, count_m, count_s);
 
-    printf("Liberando memória ...\n");
+    //printf("Liberando memória ...\n");
     for (int i = 0; i<QUANT; i++){
         if (lines[i] != NULL)
             free(lines[i]);

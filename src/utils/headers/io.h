@@ -1,8 +1,8 @@
 #ifndef IO_H
 #define IO_H
 
-#include "entry_analysis.h"
-#include "algoritmos.h"
+#include "../../headers/entry_analysis.h"
+#include "../../headers/algoritmos.h"
 
 typedef struct{
     int quant;

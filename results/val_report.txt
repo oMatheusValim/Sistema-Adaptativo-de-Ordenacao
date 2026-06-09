@@ -1,0 +1,14 @@
+==139009== Memcheck, a memory error detector
+==139009== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==139009== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==139009== Command: ./obj//run.exe
+==139009== Parent PID: 139008
+==139009== 
+==139009== 
+==139009== HEAP SUMMARY:
+==139009==     in use at exit: 0 bytes in 0 blocks
+==139009==   total heap usage: 100,127 allocs, 100,127 frees, 3,961,528 bytes allocated
+==139009== 
+==139009== All heap blocks were freed -- no leaks are possible
+==139009== 
+==139009== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

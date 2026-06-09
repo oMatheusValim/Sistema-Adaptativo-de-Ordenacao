@@ -1,8 +1,7 @@
-APPS = ./apps
-BIN = ./bin
-INCLUDE = ./include
-OBJ = ./obj
+HEADERS = ./headers
 SRC = ./src
+UTILS = ./src/utils
+OBJ = ./obj
 
 UTL = /utils
 IO = /io
@@ -10,38 +9,38 @@ EA = /entry_analysis
 ALG = /algoritmos
 IG = /input_generator
 ADP = /adaptive
-MA = /method_analysis
+MC = /method_compare
 CFG = /config
 
 all:
-	gcc -c $(SRC)$(UTL).c  -I $(INCLUDE)/ -o $(OBJ)$(UTL).o
-	gcc -c $(SRC)$(IO).c  -I $(INCLUDE)/ -o $(OBJ)$(IO).o
-	gcc -c $(SRC)$(EA).c  -I $(INCLUDE)/ -o $(OBJ)$(EA).o
-	gcc -c $(SRC)$(ALG).c  -I $(INCLUDE)/ -o $(OBJ)$(ALG).o
-	gcc -c $(SRC)$(IG).c  -I $(INCLUDE)/ -o $(OBJ)$(IG).o
-	gcc -c $(SRC)$(ADP).c  -I $(INCLUDE)/ -o $(OBJ)$(ADP).o
-	gcc -c $(SRC)$(MA).c  -I $(INCLUDE)/ -o $(OBJ)$(MA).o
-	gcc -c $(SRC)$(CFG).c  -I $(INCLUDE)/ -o $(OBJ)$(CFG).o
-	gcc $(APPS)/main.c $(OBJ)$(UTL).o $(OBJ)$(IO).o $(OBJ)$(EA).o $(OBJ)$(ALG).o $(OBJ)$(IG).o $(OBJ)$(ADP).o $(OBJ)$(MA).o $(OBJ)$(CFG).o -I $(INCLUDE) -o $(BIN)/run.exe -lm
+	gcc -c $(UTILS)$(UTL).c  -I $(HEADERS)/  -o $(OBJ)$(UTL).o
+	gcc -c $(UTILS)$(CFG).c  -I $(HEADERS)/  -o $(OBJ)$(CFG).o
+	gcc -c $(UTILS)$(IO).c   -I $(HEADERS)/  -o $(OBJ)$(IO).o
+	gcc -c $(UTILS)$(IG).c   -I $(HEADERS)/  -o $(OBJ)$(IG).o
+	gcc -c $(SRC)$(EA).c     -I $(HEADERS)/  -o $(OBJ)$(EA).o
+	gcc -c $(SRC)$(ALG).c    -I $(HEADERS)/  -o $(OBJ)$(ALG).o
+	gcc -c $(SRC)$(ADP).c    -I $(HEADERS)/  -o $(OBJ)$(ADP).o
+	gcc -c $(SRC)$(MC).c     -I $(HEADERS)/  -o $(OBJ)$(MC).o
+	gcc $(SRC)/main.c $(OBJ)$(UTL).o $(OBJ)$(CFG).o $(OBJ)$(IO).o $(OBJ)$(IG).o $(OBJ)$(EA).o $(OBJ)$(ALG).o $(OBJ)$(ADP).o $(OBJ)$(MC).o -I $(HEADERS) -o $(OBJ)/run.exe -lm
 
 
 run:
-	$(BIN)/run.exe
+	$(OBJ)/run.exe
 
 
 val:
-	gcc -c $(SRC)$(UTL).c  -I $(INCLUDE)/ -o $(OBJ)$(UTL).o
-	gcc -c $(SRC)$(IO).c  -I $(INCLUDE)/ -o $(OBJ)$(IO).o
-	gcc -c $(SRC)$(EA).c  -I $(INCLUDE)/ -o $(OBJ)$(EA).o
-	gcc -c $(SRC)$(ALG).c  -I $(INCLUDE)/ -o $(OBJ)$(ALG).o
-	gcc -c $(SRC)$(IG).c  -I $(INCLUDE)/ -o $(OBJ)$(IG).o
-	gcc -c $(SRC)$(ADP).c  -I $(INCLUDE)/ -o $(OBJ)$(ADP).o
-	gcc -c $(SRC)$(MA).c  -I $(INCLUDE)/ -o $(OBJ)$(MA).o
-	gcc -c $(SRC)$(CFG).c  -I $(INCLUDE)/ -o $(OBJ)$(CFG).o
-	gcc -g -O0 $(APPS)/main.c $(OBJ)$(UTL).o $(OBJ)$(IO).o $(OBJ)$(EA).o $(OBJ)$(ALG).o $(OBJ)$(IG).o $(OBJ)$(ADP).o $(OBJ)$(MA).o $(OBJ)$(CFG).o -I $(INCLUDE) -o $(BIN)/run.exe -lm
+	gcc -c $(UTILS)$(UTL).c  -I $(HEADERS)/  -o $(OBJ)$(UTL).o
+	gcc -c $(UTILS)$(CFG).c  -I $(HEADERS)/  -o $(OBJ)$(CFG).o
+	gcc -c $(UTILS)$(IO).c   -I $(HEADERS)/  -o $(OBJ)$(IO).o
+	gcc -c $(UTILS)$(IG).c   -I $(HEADERS)/  -o $(OBJ)$(IG).o
+	gcc -c $(SRC)$(EA).c     -I $(HEADERS)/  -o $(OBJ)$(EA).o
+	gcc -c $(SRC)$(ALG).c    -I $(HEADERS)/  -o $(OBJ)$(ALG).o
+	gcc -c $(SRC)$(ADP).c    -I $(HEADERS)/  -o $(OBJ)$(ADP).o
+	gcc -c $(SRC)$(MC).c     -I $(HEADERS)/  -o $(OBJ)$(MC).o
+	gcc -g -O0 $(SRC)/main.c $(OBJ)$(UTL).o $(OBJ)$(CFG).o $(OBJ)$(IO).o $(OBJ)$(IG).o $(OBJ)$(EA).o $(OBJ)$(ALG).o $(OBJ)$(ADP).o $(OBJ)$(MC).o -I $(HEADERS) -o $(OBJ)/run.exe -lm
 
 run_val:
-	valgrind -s --log-file="val_report.txt" --leak-check=full --show-leak-kinds=all --track-origins=yes bin/run.exe
+	valgrind -s --log-file="results/val_report.txt" --leak-check=full --show-leak-kinds=all --track-origins=yes $(OBJ)//run.exe
 
 clean:
 	rm $(OBJ)/*.o

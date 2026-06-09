@@ -1,7 +1,7 @@
-#include "utils.h"
-#include "config.h"
+#include "headers/utils.h"
+#include "headers/config.h"
 
-#define CONFIG_FILE "config.txt"
+#define CONFIG_FILE "experiments/config.txt"
 #define MAX_LINE_LEN 100
  
 // Remove whitespace da string

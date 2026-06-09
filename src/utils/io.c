@@ -1,5 +1,5 @@
-#include "utils.h"
-#include "io.h"
+#include "headers/utils.h"
+#include "headers/io.h"
 
 int write_csv(int **arrs, char* filename, int quant, int max_size, int max_num){
     FILE *fptr;
@@ -152,7 +152,7 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
     FILE *fptr;
 
     if (out_txt != 0){
-        fptr = fopen("resultados.txt", "a");
+        fptr = fopen("results/resultados.txt", "a");
         
         if (fptr == NULL) {
             printf("Erro ao criar o arquivo tabela_resultados.txt!\n");
@@ -257,7 +257,7 @@ void adaptive_comparison(metrics **m, int quant, int algs_count, int verbose, in
     FILE *fptr;
     if (out_txt != 0){
         // Abre o arquivo .txt para salvar a tabela
-        fptr = fopen("resultados.txt", "w");
+        fptr = fopen("results/resultados.txt", "w");
         if (fptr == NULL) {
             printf("Erro ao criar o arquivo tabela_resultados.txt!\n");
             return;

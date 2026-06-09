@@ -1,9 +1,11 @@
-#include "utils.h"
-#include "input_generator.h"
-#include "io.h"
-#include "adaptive.h"
-#include "method_analysis.h"
-#include "config.h"
+#include "utils/headers/utils.h"
+#include "utils/headers/config.h"
+#include "utils/headers/input_generator.h"
+#include "utils/headers/io.h"
+#include "headers/adaptive.h"
+#include "headers/method_compare.h"
+#include "headers/algoritmos.h"
+#include "headers/entry_analysis.h"
 
 int verbose;
 
@@ -39,14 +41,16 @@ static char *resolve_csv(int *out_quant, int *out_max_size, int *out_max_num){
     int max_num  = convert_env("MAX_NUM", 100, 100000); if (max_num  < 0) return NULL;
     int max_size = convert_env("MAX_SIZE", 10,  25000); if (max_size < 0) return NULL;
  
-    char *csv_path = malloc(64);
+    char *csv_path = (char*)malloc(64*sizeof(char));
+
     if (csv_path == NULL){
         printf("Erro! Falha na alocação de memória para a análise.\n"); 
-        
         return NULL;
     }
 
-    snprintf(csv_path, 64, "%s.csv", datetime_stamp());
+    char* date_time = datetime_stamp();
+    snprintf(csv_path, 64, "experiments/datasets/%s.csv", date_time);
+    free(date_time);
  
     if (generate_and_write_csv(csv_path, quant, max_size, max_num) < 0) {
         free(csv_path);

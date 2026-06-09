@@ -1,5 +1,5 @@
-#include "utils.h"
-#include "algoritmos.h"
+#include "utils/headers/utils.h"
+#include "headers/algoritmos.h"
 
 
 //função insertion 1 - faz e retorna nmr de comparações e número de movimentações.

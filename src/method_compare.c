@@ -1,5 +1,5 @@
-#include "utils.h"
-#include "method_analysis.h"
+#include "utils/headers/utils.h"
+#include "headers/method_compare.h"
 
 
 alg_ctx *find_methods(int algs_count){

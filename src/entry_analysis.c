@@ -1,5 +1,5 @@
-#include "utils.h"
-#include "entry_analysis.h"
+#include "utils/headers/utils.h"
+#include "headers/entry_analysis.h"
 
 int *entry_amp(int *arr, int n){
 

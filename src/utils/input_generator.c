@@ -1,5 +1,5 @@
-#include "utils.h"
-#include "input_generator.h"
+#include "headers/utils.h"
+#include "headers/input_generator.h"
 
 
 int *random_arr(int max_num, int max_size){

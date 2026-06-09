@@ -1,83 +1,24 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
+#include "utils.h"
 #include "entry_analysis.h"
 
+int *entry_amp(int *arr, int n){
 
-int entry_index(char *line){
+    int *min_max = (int*)calloc(2, sizeof(int));
 
-    // Retorna o valor antes da primeira virgula, que representa o index da entrada
-    char *token = strtok(line, ",");
-    return atoi(token);
-
-}
-
-int entry_size(char *line){
-    int i = 0;
-    int num_colums_csv = 0;
-
-
-    // Contagem do numero de colunas no csv, desconsiderando a ultima coluna
-    while(line[i] != '\n'){
-        if (line[i] == ',')
-            num_colums_csv++;
-
-        i++;
-    }
-
-    return (num_colums_csv);
-}
-
-
-int *allocate_arr(char *line, int n, int index){
-
-    // Alocacao do vetor de ints
-    int *arr = malloc(n * sizeof(int));
-
-    if (arr == NULL){
-        printf("Erro na alocacao do vetor de index #%d (float, size = %d)\n", index, n);
-        return NULL;
-    }
-
-    // Transferencia da linha do csv para floats
-    char *token = strtok(NULL, ",");
-    int i = 0;
-
-    while ((token != NULL) && i < n){
-        arr[i] = atoi(token);
-        token = strtok(NULL, ",");
-        i++;
-    }
-
-    return arr;
-}
-
-
-amp_analysis entry_amp(int *arr, int n){
-    amp_analysis amp;
-
-    amp.min = arr[0];
-    amp.max = arr[0];
-
-    amp.min_idx = 0;
-    amp.max_idx = 0;
+    min_max[0] = arr[0];
+    min_max[1] = arr[0];
 
     for (int i = 1; i < n; i++){
-        if (arr[i] < amp.min){
-            amp.min = arr[i];
-            amp.min_idx = i;
+        if (arr[i] < min_max[0]){
+            min_max[0] = arr[i];
         }
 
-        if (arr[i] > amp.max){
-            amp.max = arr[i];
-            amp.max_idx = i;
+        if (arr[i] > min_max[1]){
+            min_max[1] = arr[i];
         }
     }
 
-    amp.amp = amp.max - amp.min;
-
-    return amp;
+    return min_max;
 }
 
 dispersion_analysis entry_disp(int *arr, int n){
@@ -113,29 +54,27 @@ dispersion_analysis entry_disp(int *arr, int n){
     return disp;            
 }
 
-int count_uniques(int *arr, int n, amp_analysis amp){
-    int offset = -1*amp.min;
-    int count[amp.amp + 1];
+int count_uniques(int *arr, int n, int *min_max){
+
+    int offset = -1*min_max[0];
+
+    int amp = min_max[1] - min_max[0] + 1;
+
+    int *count = (int*)calloc(amp, sizeof(int));
     int i;
     int uniques = 0;
-
-    //inicializa o vetor para zero
-    for(i = 0; i<= amp.amp; i++){
-        count[i] = 0;
-    }
 
     //conta repetições
     for (int i = 0; i<n; i++){
         count[arr[i] + offset]++;
         uniques++;
 
-
         if (count[arr[i] + offset] > 1)
             uniques--;
-
     }
-    return uniques;
 
+    free(count);
+    return uniques;
 }
 
 
@@ -153,7 +92,7 @@ int countInv(int *arr, int n) {
     return count;
 }
 
-distribution_analysis entry_distr(int *arr, int n, amp_analysis amp){
+distribution_analysis entry_distr(int *arr, int n, int *min_max){
 
     distribution_analysis distr = {0};   
 
@@ -171,7 +110,7 @@ distribution_analysis entry_distr(int *arr, int n, amp_analysis amp){
     }
 
     distr.disp = entry_disp(arr, n);
-    int unique_nums_count = count_uniques(arr, n, amp);
+    int unique_nums_count = count_uniques(arr, n, min_max);
 
     distr.repetitions = n - unique_nums_count;
     distr.duplicate_density = (float)distr.repetitions/n;
@@ -180,36 +119,24 @@ distribution_analysis entry_distr(int *arr, int n, amp_analysis amp){
 }
 
 
-entry_analysis analyse_entry(char *line){
+entry_analysis analyse_entry(int *arr, int n, int index){
 
     entry_analysis ea = {0};
 
-    ea.size = entry_size(line);
-    ea.index = entry_index(line);
+    ea.size = n;
+    ea.vector = arr;
+    ea.index = index;
 
-    ea.vector = allocate_arr(line, ea.size, ea.index);
+    int *min_max = entry_amp(ea.vector, ea.size);
+    ea.amp = min_max[1] - min_max[0] + 1;
+    ea.distr = entry_distr(ea.vector, ea.size, min_max);
 
-    ea.amp = entry_amp(ea.vector, ea.size);
-    ea.distr = entry_distr(ea.vector, ea.size, ea.amp);
+    free(min_max);
 
     return ea;
 }
 
-int *copy_vector (int *arr, int n){
-    
-    int *desordem =  malloc(n * sizeof(int));
-    if (desordem == NULL)
-    {
-        printf("Erro na alocação de memória para o vetor desordenado\n");
-        return NULL;
-    }
-    for (int i =0; i < n; i++)
-    {
-        desordem[i]=arr[i];
-    }
 
-    return desordem;
-}
 
 
 

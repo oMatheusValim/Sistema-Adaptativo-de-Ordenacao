@@ -1,15 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
-
-typedef struct{
-    int min;
-    int min_idx;
-    int max;
-    int max_idx;
-    int amp;
-}amp_analysis;
+#ifndef EA_H
+#define EA_H
 
 typedef struct{
     float avg;
@@ -26,13 +16,12 @@ typedef struct{
 typedef struct{
     int index;
     int size;
-    amp_analysis amp;
+    int amp;
     int *vector;
     distribution_analysis distr;
 }entry_analysis;
 
-entry_analysis analyse_entry(char *line);
-
-int *copy_vector (int *arr, int n);
+entry_analysis analyse_entry(int *arr, int n, int index);
 
 
+#endif

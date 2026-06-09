@@ -1,104 +1,130 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-
+#include "utils.h"
 #include "input_generator.h"
 #include "io.h"
 #include "adaptive.h"
+#include "method_analysis.h"
 
+#define QUANT 1000
+#define MAX_NUM 10000
+#define MAX_SIZE 1000
 
-#define QUANT 500
-#define MAX_NUM 100000
-#define MAX_SIZE 8000
+int main(int argc, char *argv[]){    
 
-int main(){
+    int algs_count = load_envs(argc, argv);
+    if (algs_count < 0) return -1;
 
-    printf("Gerando os dados aleatoriamente ...\n");
-    int **arrs = create_arrs(QUANT, MAX_SIZE, MAX_NUM);
+    int verbose = (getenv("VERBOSE") != NULL) ? atoi(getenv("VERBOSE")) : 0;
+    char *csv = getenv("CSV_FILE");
     
-    int *desordem = copy_vector(*arrs, QUANT);
+    int quant; 
+    int max_size;
+    int max_num;
 
-    printf("Colocando os dados no csv ...\n");
-    write_csv(arrs, QUANT, "entrada.csv", MAX_NUM);
+    if ((csv == NULL) || (strlen(csv) == 0) || (csv[0] == '\0')){
 
-    printf("Lendo os dados do csv...\n");
-    char **lines = read_data_input("entrada.csv", QUANT, MAX_NUM, MAX_SIZE);
-    entry_analysis ea = {0};
+        sprintf(csv, "%s.env", datetime_stamp());
 
-    int i = 1;
+        quant = convert_env("QUANT", 1, 10, 80000); if (quant < 0) return -1;
+        max_num = convert_env("MAX_NUM", 1, 100, 100000); if (max_num < 0) return -1;
+        max_size = convert_env("MAX_SIZE", 1, 10, 25000); if (max_size < 0) return -1;
 
-    int count_c = 0;
-    int count_h = 0;
-    int count_i = 0;
-    int count_m = 0;
-    int count_s = 0;
+        if (verbose != 0) printf("Gerando os dados aleatoriamente ...\n");
+        int **arrs = create_arrs(quant, max_size, max_num);
 
+        if (verbose != 0) printf("Colocando os arrays desordenados no csv de entrada %s ...\n", csv);
+        write_csv(arrs, csv, quant, max_size, max_num);
 
+        for (int i = 0; i<quant; i++){        
+            if (arrs[i] != NULL){
+                free(arrs[i]);
+            }
+        }free(arrs);
+
+    }
+
+    if (verbose != 0) printf("Lendo os dados do arquivo %s...\n", csv);
+    csv_extraction csv_results = read_csv(csv); if (csv_results.quant < 0) return -1;
+
+    quant = csv_results.quant;
+    max_size = csv_results.max_size;
+    max_num = csv_results.max_num;
+
+    method_arr *arrs_full = find_methods(algs_count);
+
+    int method_count[5] = {0, 0, 0, 0, 0};
+    entry_analysis *ea = (entry_analysis*)calloc(quant, sizeof(entry_analysis));
+    metrics **m = (metrics**)calloc(algs_count, sizeof(metrics*));
+
+    for (int i = 0; i< algs_count; i++){
+        m[i] = (metrics*)calloc(quant, sizeof(metrics));
+    }
     
-    printf("Inicio da análise...\n");
-    for (i=1; i<QUANT; i++){
-        if (lines[i] != NULL){
-            ea = analyse_entry(lines[i]);
+    if (verbose != 0) printf("Inicio da análise...\n");
+    for (int i = 0; i < quant; i++){
+        if (csv_results.lines[i] != NULL){
+            arrs_full = allocate_arrs(csv_results.lines[i], arrs_full, algs_count);
 
-            //PARA TESTAR SÓ UM ALGORITMO, DESCOMENTE ELE ABAIXO E O PRINTF QUE COMEÇA COM COMP...
-                //metrics m = countingSort(ea.vector, ea.size);
-                //metrics m = heapSort(ea.vector, ea.size);
-                //metrics m = mergeSort(ea.vector, ea.size);
-                //metrics m = selectionSort(ea.vector, ea.size);
-                //metrics m = insertionSort(ea.vector, ea.size);
-                //printf("Index: %d, Size: %d, Comp: %lld, Movements: %lld, time: %f \n", ea.index, ea.size, m.compare, m.movements, m.tempo);
+            for (int j = 0; j<algs_count; j++){
 
-                
-            //PARA TESTAR A ÁRVORE DE DECISÃO, DESCOMENTE AS PRÓXIMAS 2 LINHAS DE CÓDIGO
-                metrics m = decision_tree(ea, MAX_SIZE);
-                printf("time: %f \n", m.tempo);
+                switch (arrs_full[j].method){
+                    case 'A':
+                        ea[i] = analyse_entry(arrs_full[j].arr, arrs_full[j].size, arrs_full[j].index);
+                        m[j][i] = decision_tree(ea[i], max_size);
+                        //printf("time: %f \n", m[j][i].tempo);
+                        method_count[char_to_int(m[j][i].metodo)]++;
+                        break;
 
-            
-            switch (m.metodo){
-                case 'c':
-                    count_c++;
-                    break;
-                
-                case 'h':
-                    count_h++;
-                    break;
+                    case 'C':
+                        m[j][i] = countingSort(arrs_full[j].arr, arrs_full[j].size);
+                        break;
 
-                case 'i':
-                    count_i++;
-                    break;
+                    case 'H':
+                        m[j][i] = heapSort(arrs_full[j].arr, arrs_full[j].size);
+                        break;
 
-                case 'm':
-                    count_m++;
-                    break;
+                    case 'I':
+                        m[j][i] = insertionSort(arrs_full[j].arr, arrs_full[j].size);
+                        break;
 
-                case 's':
-                    count_s++;
-                    break;
-            }
-            
-            if (ea.vector != NULL){
-                free(ea.vector);
-            }
- 
+                    case 'M':
+                        m[j][i] = mergeSort(arrs_full[j].arr, arrs_full[j].size);
+                        break;
+
+                    case 'S':
+                        m[j][i] = selectionSort(arrs_full[j].arr, arrs_full[j].size);
+                        break;
+
+                }
+
+                if (arrs_full[j].arr != NULL) free(arrs_full[j].arr);
+            } 
         }
     }
 
-    printf("STATS: c: %d, h: %d, i: %d, m: %d, s: %d\n", count_c, count_h, count_i, count_m, count_s);
+    adaptive_comparison(m, quant, algs_count);
 
-    printf("Liberando memória ...\n");
-    for (int i = 0; i<QUANT; i++){
-        if (lines[i] != NULL)
-            free(lines[i]);
-
-        if (arrs[i] != NULL)
-            free(arrs[i]);
+    for (int i = 0; i < algs_count; i++){
+        if (arrs_full[i].method == 'A'){
+            decision_tree_statistics(ea, m[i], method_count, quant);
+        }
+        if (m[i] != NULL) free(m[i]);
     }
 
-    free(arrs);
-    free(lines);
+    if (verbose != 0) printf("Liberando memória ...\n");
+    for (int i = 0; i<quant; i++){
+        if (csv_results.lines[i] != NULL) free(csv_results.lines[i]);
+
+    }
+
+    free(arrs_full);
+    free(csv_results.lines);
+    free(ea);
+    free(csv);
+    free(m);
 
     printf("Fim da execução\n");
 
     return 0;
+
+    
 }

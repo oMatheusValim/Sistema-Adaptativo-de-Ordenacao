@@ -1,0 +1,29 @@
+# Quais algoritmos de sorting devem ser utilizados/comparados
+A=0
+C=0
+H=0
+I=0
+M=0
+S=0
+
+# Detalhes da entrada
+CSV_FILE=
+QUANT=1000
+MAX_SIZE=1000
+MAX_NUM=10000
+
+NEGATIVE=10
+
+ADV=10
+SRT=10
+R_SRT=10
+EQUAL=10
+
+SEED=
+
+# Detalhes da saída
+VERBOSE=1
+VAL_TXT=1
+OUT_TXT=1
+
+

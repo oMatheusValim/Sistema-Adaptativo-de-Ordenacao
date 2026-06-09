@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include "utils.h"
 #include "algoritmos.h"
 
 
@@ -15,34 +13,34 @@ metrics insertionSort1(int arr[], int n){
         while (j >= 0 ) {
             m.compare++;
 
-            if (arr[j]>key)
-            {
+            if (arr[j]>key) {
                 arr[j + 1] = arr[j];
-                j = j - 1;
+                j--;
                 m.movements++;
             }
-            else 
-            {
+
+            else {
                 break;
             }
             
         }
+
         arr[j + 1] = key;
     }
     return m;
 }
 
 //função insertionSort, retorna o struct completo (com o tempo)
-metrics insertionSort(int arr[], int n)
-{
+metrics insertionSort(int arr[], int n){
     clock_t inicio = clock();
-    metrics m =insertionSort1(arr, n);
+    metrics m = insertionSort1(arr, n);
     clock_t fim = clock();
-    m.tempo =  (double)(fim - inicio)/ CLOCKS_PER_SEC;
+    
+    m.tempo = (double)(fim - inicio)/ CLOCKS_PER_SEC;
     m.max_depth++;
     m.stability = 1;
-    m.ordenado = arr;
     m.metodo = 'i';
+    m.ordenado = arr;
     return m;
 }
 
@@ -80,11 +78,11 @@ metrics selectionSort(int arr[], int n)
     m.tempo =  (double)(fim - inicio)/ CLOCKS_PER_SEC;
     
     m.stability = 0;
-    m.ordenado = arr;
     m.metodo = 's';
+    m.ordenado = arr;
+
     return m;
 }
-
 
 void merge(int arr[], int inicio, int meio, int fim, metrics *m){
     
@@ -95,20 +93,19 @@ void merge(int arr[], int inicio, int meio, int fim, metrics *m){
     int *L = malloc(n1 * sizeof(int));
     int *R = malloc(n2 * sizeof(int));
 
-    if (m==NULL)
-    {
+    m->memory += (n1 + n2)*sizeof(int);
+
+    if (m == NULL){
         printf("Ponteiro Metrics é NULL");
         exit(EXIT_FAILURE);
     }
  
-    for (i = 0; i < n1; i++)
-    {
+    for (i = 0; i < n1; i++){
         L[i] = arr[inicio + i];
         m->movements++;
     }
        
-    for (j = 0; j < n2; j++)
-    {
+    for (j = 0; j < n2; j++){
         R[j] = arr[meio + 1 + j];
         m->movements++;
     }
@@ -116,8 +113,8 @@ void merge(int arr[], int inicio, int meio, int fim, metrics *m){
     i = 0;
     j = 0;
     k = inicio;
-    while (i < n1 && j < n2) 
-    {
+
+    while (i < n1 && j < n2){
         m->compare++;
         if (L[i] <= R[j]) {
             arr[k] = L[i];
@@ -131,8 +128,7 @@ void merge(int arr[], int inicio, int meio, int fim, metrics *m){
         m->movements++;
     }
 
-    while (i < n1) 
-    {
+    while (i < n1){
         arr[k] = L[i];
         i++;
         k++;
@@ -145,25 +141,22 @@ void merge(int arr[], int inicio, int meio, int fim, metrics *m){
         k++;
         m->movements++;
     }
+
     free(L);
     free(R);
 }
 
-
 void mergeSortRec(int arr[], int inicio, int fim, metrics *m, int profundidade){
 
     m->chamadas_recursivas++;
-    if (profundidade > m->max_depth)
-    {
+    if (profundidade > m->max_depth){
         m->max_depth = profundidade;
     }
 
 
-    if (inicio < fim) 
-    {
+    if (inicio < fim){
         int meio = inicio + (fim - inicio)/ 2;
 
-        
         mergeSortRec(arr, inicio, meio, m, profundidade + 1);
         mergeSortRec(arr, meio + 1, fim, m, profundidade + 1);
 
@@ -171,8 +164,7 @@ void mergeSortRec(int arr[], int inicio, int fim, metrics *m, int profundidade){
     }
 }
 
-metrics mergeSort (int arr[], int n)
-{
+metrics mergeSort (int arr[], int n){
     metrics m = {0};
 
     clock_t inicio = clock();
@@ -183,22 +175,19 @@ metrics mergeSort (int arr[], int n)
 
     m.tempo = (double)(fim - inicio)/ CLOCKS_PER_SEC;
     m.stability = 1;
-    m.ordenado = arr;
     m.metodo = 'm';
+    m.ordenado = arr;
     return m;
-
-
 }
 
-void swap( int *a, int *b, metrics *m)
-{
+void swap( int *a, int *b, metrics *m){
     int temp= *a;
     *a = *b;
     *b = temp;
     m->movements++;
 }
 
-void heapify(int arr[],int n,int i,metrics *m,int profundidade)
+void heapify(int arr[], int n, int i, metrics *m, int profundidade)
 {
     m->chamadas_recursivas++;
 
@@ -234,8 +223,7 @@ void heapify(int arr[],int n,int i,metrics *m,int profundidade)
     }
 }
 
-metrics heapSort(int arr[], int n)
-{
+metrics heapSort(int arr[], int n){
     metrics m = {0};
 
     clock_t inicio = clock();
@@ -257,8 +245,8 @@ metrics heapSort(int arr[], int n)
         (double)(fim - inicio) / CLOCKS_PER_SEC;
     
     m.stability = 0;
-    m.ordenado = arr;
     m.metodo = 'h';
+    m.ordenado = arr;
     return m;
 }
 
@@ -325,9 +313,9 @@ metrics countingSort(int arr[], int n){
     clock_t fim = clock();
 
     m.tempo = (double)(fim - inicio) / CLOCKS_PER_SEC;
-
-    m.ordenado = arr;
     m.metodo = 'c';
+    m.ordenado = arr;
+    m.max_depth = 1;
     return m;
 }
 

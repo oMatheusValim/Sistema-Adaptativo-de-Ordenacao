@@ -9,9 +9,9 @@ typedef struct{
     int *arr;
     int index;
     int size;
-}method_arr;
+}alg_ctx;
 
-method_arr *find_methods(int algs_count);
-method_arr *allocate_arrs(char *line, method_arr *arrs, int algs_count);
+alg_ctx *find_methods(int algs_count);
+alg_ctx *cpy_arrs(char *line, alg_ctx *arrs, int algs_count);
 
 #endif

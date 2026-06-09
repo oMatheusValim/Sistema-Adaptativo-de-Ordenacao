@@ -2,11 +2,11 @@
 #include "method_analysis.h"
 
 
-method_arr *find_methods(int algs_count){
+alg_ctx *find_methods(int algs_count){
 
-    method_arr *arrs = (method_arr *)malloc(algs_count * sizeof(method_arr));
+    alg_ctx *arrs = (alg_ctx *)malloc(algs_count * sizeof(alg_ctx));
     if (arrs == NULL){
-        printf("Erro! Não foi possível alocar memória para os vetores de inteiros!\n Fim de execução\n");
+        printf("Erro! Não foi possível alocar memória para os vetores de inteiros!\n ");
         return NULL;
     }
 
@@ -73,7 +73,7 @@ int *allocate_arr(char *line, int n, int index){
     return arr;
 }
 
-method_arr *allocate_arrs(char *line, method_arr *arrs, int algs_count){
+alg_ctx *cpy_arrs(char *line, alg_ctx *arrs, int algs_count){
 
     int index = entry_index(line);
     int size = entry_size(line);

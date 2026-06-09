@@ -1,18 +1,18 @@
 #include "utils.h"
 #include "io.h"
 
-void write_csv(int **arrs, char* filename, int quant, int max_size, int max_num){
+int write_csv(int **arrs, char* filename, int quant, int max_size, int max_num){
     FILE *fptr;
 
     fptr = fopen(filename, "w");
 
     if (fptr == NULL) {
         printf("Erro ao abrir o arquivo de entrada\n");
-        return;
+        return -1;
     }
 
     fprintf(fptr, "index,nums...\n");
-    fprintf(fptr, "%d, %d, %d\n", quant, max_size, max_num);
+    fprintf(fptr, "%dQ, %dS, %dN\n", quant, max_size, max_num);
     for (int i = 0; i < quant; i++){
         fprintf(fptr, "%d,", i);
 
@@ -32,14 +32,15 @@ void write_csv(int **arrs, char* filename, int quant, int max_size, int max_num)
     }
 
     fclose(fptr);
+    return 1;
 }
 
 
-csv_extraction read_csv(char* file_name){
+csv_line read_csv(char* file_name){
 
-    csv_extraction csv_results = {0};
+    csv_line cl = {0};
 
-    csv_results.quant = -1; //Código de erro para a main
+    cl.quant = -1; //Código de erro para a main
 
     FILE *fptr;
 
@@ -47,7 +48,7 @@ csv_extraction read_csv(char* file_name){
 
     if (fptr == NULL) {
         printf("Erro! Não foi possível abrir o arquivo %s para leitura!\n", file_name);
-        return csv_results;
+        return cl;
     }
 
     char temp_buffer[40];
@@ -64,7 +65,7 @@ csv_extraction read_csv(char* file_name){
     if (token != NULL) quant = atoi(token);    
     else{
         printf("Erro! Não foi possível identificar o valor de QUANT no arquivo %s!\n", file_name);
-        return csv_results;
+        return cl;
     }
 
     token = strtok(NULL, ",");  
@@ -72,7 +73,7 @@ csv_extraction read_csv(char* file_name){
     if (token != NULL) max_size = atoi(token);
     else{
         printf("Erro! Não foi possível identificar o valor de MAX_SIZE no arquivo %s!\n", file_name);
-        return csv_results;
+        return cl;
     }
 
     token = strtok(NULL, "\n");  
@@ -80,7 +81,7 @@ csv_extraction read_csv(char* file_name){
     if (token != NULL) max_num = atoi(token);
     else{
         printf("Erro! Não foi possível identificar o valor de MAX_NUM no arquivo %s!\n", file_name);
-        return csv_results;
+        return cl;
     }
 
     int buffers_size = max_size*(((int)log10(max_num)) + 2);
@@ -89,7 +90,7 @@ csv_extraction read_csv(char* file_name){
 
     if (lines == NULL){
         printf("Erro! Não foi possível alocar memoria para o texto do csv!\n");
-        return csv_results;
+        return cl;
     }
 
     int i = 0;
@@ -110,16 +111,18 @@ csv_extraction read_csv(char* file_name){
 
     fclose(fptr);
 
-    csv_results.lines = lines;
-    csv_results.quant = quant;
-    csv_results.max_size = max_size;
-    csv_results.max_num = max_num;
+    cl.lines = lines;
+    cl.quant = quant;
+    cl.max_size = max_size;
+    cl.max_num = max_num;
 
-    return csv_results;
+    return cl;
 }
 
 
-void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count, int quant){
+void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count, int quant, int verbose, int out_txt){
+
+    if ((verbose + out_txt) <= 0) return;
 
     tree_statistics ts[5] = {0, 0, 0, 0, 0};
 
@@ -139,86 +142,86 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
         ts[method].avg_max_depth += m[i].max_depth;
     }
 
-    // Abre o arquivo .txt para salvar a tabela
-    FILE *fptr = fopen("tabela_resultados.txt", "a");
-    if (fptr == NULL) {
-        printf("Erro ao criar o arquivo tabela_resultados.txt!\n");
-        return;
+
+    if (verbose != 0){
+        printf("\n\n==================================== DISTRIBUIÇÃO DE ALGOTIMOS PELA ÁRVORE DE DECISÃO ===================================================\n\n");
+        printf("            count - %%      avg(t)    avg(n)    avg(amp)   avg(distr)   avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
     }
 
-    printf("\n\n==================================== DISTRIBUIÇÃO DE ALGOTIMOS PELA ÁRVORE DE DECISÃO ===================================================\n\n");
-    printf("            count - %%      avg(t)    avg(n)    avg(amp)   avg(distr)   avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
+    // Abre o arquivo .txt para salvar a tabela
+    FILE *fptr;
 
-    //o que vai pro txt é o fprintf
-    fprintf(fptr, "\n\n==================================== DISTRIBUIÇÃO DE ALGOTIMOS PELA ÁRVORE DE DECISÃO =============================================\n\n");
-    fprintf(fptr, "            count - %%      avg(t)    avg(n)    avg(amp)   avg(distr)   avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
+    if (out_txt != 0){
+        fptr = fopen("resultados.txt", "a");
+        
+        if (fptr == NULL) {
+            printf("Erro ao criar o arquivo tabela_resultados.txt!\n");
+            return;
+        }
 
+        //o que vai pro txt é o fprintf
+        fprintf(fptr, "\n\n==================================== DISTRIBUIÇÃO DE ALGOTIMOS PELA ÁRVORE DE DECISÃO =============================================\n\n");
+        fprintf(fptr, "            count - %%      avg(t)    avg(n)    avg(amp)   avg(distr)   avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
+    }
 
     for (int i = 0; i < 5; i++){
 
-        switch (i){
-            case 0:
-                printf("%-12s", "COUNT");
-                fprintf(fptr, "%-12s", "COUNT");
-                break;
+        if (verbose != 0){
+            switch (i){
+                case 0: printf("%-12s", "COUNT"); break;
+                case 1: printf("%-12s", "HEAP"); break;
+                case 2: printf("%-12s", "INSERTION"); break;
+                case 3: printf("%-12s", "MERGE"); break;
+                case 4: printf("%-12s", "SORTING"); break;
             
-            case 1:
-                printf("%-12s", "HEAP");
-                fprintf(fptr, "%-12s", "HEAP");
-                break;
-
-            case 2:
-                printf("%-12s", "INSERTION");
-                fprintf(fptr, "%-12s", "INSERTION");
-                break;
-
-            case 3:
-                printf("%-12s", "MERGE");
-                fprintf(fptr, "%-12s", "MERGE");
-                break;
-
-            case 4:
-                printf("%-12s", "SELECTION");
-                fprintf(fptr, "%-12s", "SELECTION");
-                break;
+            if (method_count[i] == 0)
+                printf("    0 - 0.00   -         -         -          -            -           -          -          -          -\n");
+                continue;
             }
 
-        if (method_count[i] == 0){
-            printf("    0 - 0.00   -         -         -          -            -           -          -          -          -\n");
-            fprintf(fptr, "    0 - 0.00   -         -         -          -            -           -          -          -          -\n");
-            continue;
+            printf("%5d - %-7.2f", method_count[i], (float)method_count[i]/quant);                                                                                                                                                                                                                                                             
+            printf("%-10.5f", ts[i].avg_t/method_count[i]);
+            printf("%-10d", ts[i].avg_n/method_count[i]);
+            printf("%-11d", ts[i].avg_amp/method_count[i]);
+            printf("%-13.3f", ts[i].avg_distr/method_count[i]);
+            printf("%-12lld", ts[i].avg_cmp/method_count[i]);
+            printf("%-11lld", ts[i].avg_mov/method_count[i]);
+            printf("%-11lld", ts[i].avg_mem/method_count[i]);
+            printf("%-11lld", ts[i].avg_rec/method_count[i]);
+            printf("%-13d\n", ts[i].avg_max_depth/method_count[i]);
+
         }
 
-        printf("%5d - %-7.2f", method_count[i], (float)method_count[i]/quant);                                                                                                                                                                                                                                                             
-        printf("%-10.5f", ts[i].avg_t/method_count[i]);
-        printf("%-10d", ts[i].avg_n/method_count[i]);
-        printf("%-11d", ts[i].avg_amp/method_count[i]);
-        printf("%-13.3f", ts[i].avg_distr/method_count[i]);
-        printf("%-12lld", ts[i].avg_cmp/method_count[i]);
-        printf("%-11lld", ts[i].avg_mov/method_count[i]);
-        printf("%-11lld", ts[i].avg_mem/method_count[i]);
-        printf("%-11lld", ts[i].avg_rec/method_count[i]);
-        printf("%-13d\n", ts[i].avg_max_depth/method_count[i]);
+        if (out_txt != 0){
+            switch (i){
+                case 0: fprintf(fptr, "%-12s", "COUNT"); break;
+                case 1: fprintf(fptr, "%-12s", "HEAP"); break;
+                case 2: fprintf(fptr, "%-12s", "INSERTION"); break;
+                case 3: fprintf(fptr, "%-12s", "MERGE"); break;
+                case 4: fprintf(fptr, "%-12s", "SORTING"); break;
+            }
 
-        fprintf(fptr, "%5d - %-7.2f", method_count[i], (float)method_count[i]/quant);                                                                                                                                                                                                                                                             
-        fprintf(fptr, "%-10.5f", ts[i].avg_t/method_count[i]);
-        fprintf(fptr, "%-10d", ts[i].avg_n/method_count[i]);
-        fprintf(fptr, "%-11d", ts[i].avg_amp/method_count[i]);
-        fprintf(fptr, "%-13.3f", ts[i].avg_distr/method_count[i]);
-        fprintf(fptr, "%-12lld", ts[i].avg_cmp/method_count[i]);
-        fprintf(fptr, "%-11lld", ts[i].avg_mov/method_count[i]);
-        fprintf(fptr, "%-11lld", ts[i].avg_mem/method_count[i]);
-        fprintf(fptr, "%-11lld", ts[i].avg_rec/method_count[i]);
-        fprintf(fptr, "%-13d\n", ts[i].avg_max_depth/method_count[i]);
+            fprintf(fptr, "%5d - %-7.2f", method_count[i], (float)method_count[i]/quant);                                                                                                                                                                                                                                                             
+            fprintf(fptr, "%-10.5f", ts[i].avg_t/method_count[i]);
+            fprintf(fptr, "%-10d", ts[i].avg_n/method_count[i]);
+            fprintf(fptr, "%-11d", ts[i].avg_amp/method_count[i]);
+            fprintf(fptr, "%-13.3f", ts[i].avg_distr/method_count[i]);
+            fprintf(fptr, "%-12lld", ts[i].avg_cmp/method_count[i]);
+            fprintf(fptr, "%-11lld", ts[i].avg_mov/method_count[i]);
+            fprintf(fptr, "%-11lld", ts[i].avg_mem/method_count[i]);
+            fprintf(fptr, "%-11lld", ts[i].avg_rec/method_count[i]);
+            fprintf(fptr, "%-13d\n", ts[i].avg_max_depth/method_count[i]);
+        }
     }
 
-
     //Fechamento do arquivo
-    fclose(fptr);
+    if (out_txt != 0) fclose(fptr);
 }
 
 
-void adaptive_comparison(metrics **m, int quant, int algs_count){
+void adaptive_comparison(metrics **m, int quant, int algs_count, int verbose, int out_txt){
+
+    if ((verbose + out_txt) <= 0) return;
 
     adaptive_statistics as[algs_count];
 
@@ -246,72 +249,65 @@ void adaptive_comparison(metrics **m, int quant, int algs_count){
         }
     }
 
-
-    // Abre o arquivo .txt para salvar a tabela
-    FILE *fptr = fopen("tabela_resultados.txt", "w");
-    if (fptr == NULL) {
-        printf("Erro ao criar o arquivo tabela_resultados.txt!\n");
-        return;
+    if (verbose != 0){
+        printf("============= COMPARAÇÃO DA ÁRVORE DE DECISÃO COM UM ALGORITMO ESTÁTICO ============\n\n");
+        printf("            avg(t)     avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
     }
 
-    printf("============= COMPARAÇÃO DA ÁRVORE DE DECISÃO COM UM ALGORITMO ESTÁTICO ============\n\n");
-    printf("            avg(t)     avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
-
-    //o que vai pro txt é o fprintf
-    fprintf(fptr, "============= COMPARAÇÃO DA ÁRVORE DE DECISÃO COM UM ALGORITMO ESTÁTICO ============\n\n");
-    fprintf(fptr, "            avg(t)     avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
+    FILE *fptr;
+    if (out_txt != 0){
+        // Abre o arquivo .txt para salvar a tabela
+        fptr = fopen("resultados.txt", "w");
+        if (fptr == NULL) {
+            printf("Erro ao criar o arquivo tabela_resultados.txt!\n");
+            return;
+        }
+        //o que vai pro txt é o fprintf
+        fprintf(fptr, "============= COMPARAÇÃO DA ÁRVORE DE DECISÃO COM UM ALGORITMO ESTÁTICO ============\n\n");
+        fprintf(fptr, "            avg(t)     avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
+    }
 
     for (int i = 0; i < algs_count; i++){
 
-        switch (as[i].method){
-            case 'a':
-                printf("%-12s", "ADAPTATIVO");
-                fprintf(fptr, "%-12s", "ADAPTATIVO");
-                break;
+        if (verbose != 0){
 
-            case 'c':
-                printf("%-12s", "COUNT");
-                fprintf(fptr, "%-12s", "COUNT");
-                break;
-            
-            case 'h':
-                printf("%-12s", "HEAP");
-                fprintf(fptr, "%-12s", "HEAP");
-                break;
+            switch (as[i].method){
+                case 'a': printf("%-12s", "ADAPTATIVO"); break;
+                case 'c': printf("%-12s", "COUNT"); break;
+                case 'h': printf("%-12s", "HEAP"); break;
+                case 'i': printf("%-12s", "INSERTION"); break;
+                case 'm': printf("%-12s", "MERGE"); break;
+                case 's': printf("%-12s", "SELECTION"); break;
+            }
+                                                                                                                                                                                                                                               
+            printf("%-11.5f", as[i].avg_t/quant);
+            printf("%-12lld", as[i].avg_cmp/quant);
+            printf("%-11lld", as[i].avg_mov/quant);
+            printf("%-11lld", as[i].avg_mem/quant);
+            printf("%-11lld", as[i].avg_rec/quant);
+            printf("%-13d\n", as[i].avg_max_depth/quant);
+        }
+           
 
-            case 'i':
-                printf("%-12s", "INSERTION");
-                fprintf(fptr, "%-12s", "INSERTION");
-                break;
-
-            case 'm':
-                printf("%-12s", "MERGE");
-                fprintf(fptr, "%-12s", "MERGE");
-                break;
-
-            case 's':
-                printf("%-12s", "SELECTION");
-                fprintf(fptr, "%-12s", "SELECTION");
-                break;
+        if (out_txt != 0){
+            switch (as[i].method){
+                case 'a': fprintf(fptr, "%-12s", "ADAPTATIVO"); break;
+                case 'c': fprintf(fptr, "%-12s", "COUNT"); break;
+                case 'h': fprintf(fptr, "%-12s", "HEAP"); break;
+                case 'i': fprintf(fptr, "%-12s", "INSERTION"); break;
+                case 'm': fprintf(fptr, "%-12s", "MERGE"); break;
+                case 's': fprintf(fptr, "%-12s", "SELECTION"); break;
             }
 
-                                                                                                                                                                                                                                                           
-        printf("%-11.5f", as[i].avg_t/quant);
-        printf("%-12lld", as[i].avg_cmp/quant);
-        printf("%-11lld", as[i].avg_mov/quant);
-        printf("%-11lld", as[i].avg_mem/quant);
-        printf("%-11lld", as[i].avg_rec/quant);
-        printf("%-13d\n", as[i].avg_max_depth/quant);
-                                                                                                                                                                                                                                                          
-        fprintf(fptr, "%-11.5f", as[i].avg_t/quant);
-        fprintf(fptr, "%-12lld", as[i].avg_cmp/quant);
-        fprintf(fptr, "%-11lld", as[i].avg_mov/quant);
-        fprintf(fptr, "%-11lld", as[i].avg_mem/quant);
-        fprintf(fptr, "%-11lld", as[i].avg_rec/quant);
-        fprintf(fptr, "%-13d\n", as[i].avg_max_depth/quant);
+            fprintf(fptr, "%-11.5f", as[i].avg_t/quant);
+            fprintf(fptr, "%-12lld", as[i].avg_cmp/quant);
+            fprintf(fptr, "%-11lld", as[i].avg_mov/quant);
+            fprintf(fptr, "%-11lld", as[i].avg_mem/quant);
+            fprintf(fptr, "%-11lld", as[i].avg_rec/quant);
+            fprintf(fptr, "%-13d\n", as[i].avg_max_depth/quant);
+        }
     }
 
-
     //Fechamento do arquivo
-    fclose(fptr);
+    if (out_txt != 0) fclose(fptr);
 }

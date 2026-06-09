@@ -19,5 +19,6 @@ metrics selectionSort(int arr[], int n);
 metrics mergeSort (int arr[], int n);
 metrics heapSort(int arr[], int n);
 metrics countingSort(int arr[], int n);
+int verify_sort(int arr[], int n);
 
 #endif

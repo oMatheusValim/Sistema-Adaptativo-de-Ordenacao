@@ -319,3 +319,11 @@ metrics countingSort(int arr[], int n){
     return m;
 }
 
+int verify_sort(int arr[], int n){
+    for (int i = 1; i < n; i++){
+        if (arr[i-1] > arr[i])   return -1;
+    }
+
+    return 1;
+}
+

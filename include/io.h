@@ -9,7 +9,7 @@ typedef struct{
     int max_size;
     int max_num;
     char **lines;
-}csv_extraction;
+}csv_line;
 
 typedef struct {
     char method;
@@ -36,9 +36,9 @@ typedef struct {
 
 }adaptive_statistics;
 
-csv_extraction read_csv(char* file_name);
-void write_csv(int **arrs, char* filename, int quant, int max_size, int max_num);
-void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count, int quant);
-void adaptive_comparison(metrics **m, int quant, int algs_count);
+csv_line read_csv(char* file_name);
+int write_csv(int **arrs, char* filename, int quant, int max_size, int max_num);
+void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count, int quant, int verbose, int out_txt);
+void adaptive_comparison(metrics **m, int quant, int algs_count, int verbose, int out_txt);
 
 #endif

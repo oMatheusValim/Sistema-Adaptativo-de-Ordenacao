@@ -86,7 +86,6 @@ int load_envs(int argc, char *argv[]){
     config_load_file();
     config_load_args(argc, argv);
 
-
     int algs_count = 0;
 
     algs_count += atoi(getenv("A") ? getenv("A") : "0");
@@ -97,7 +96,7 @@ int load_envs(int argc, char *argv[]){
     algs_count += atoi(getenv("S") ? getenv("S") : "0");
 
     if (algs_count == 0){
-        printf("Erro! É necessário incluir pelo menos um algoritmo de sorting ou o método adaptativo!\n Fim de Execução!\n");
+        printf("Erro! É necessário incluir pelo menos um algoritmo de sorting ou o método adaptativo!\n ");
         return -1;
     }
 
@@ -106,17 +105,12 @@ int load_envs(int argc, char *argv[]){
 
 
 // Já verifica se as contantes tão no jeito e passa pra int
-int convert_env(char* key, int importance, int lower, int upper){
+int convert_env(char* key, int lower, int upper){
 
     char *key_c = (getenv(key));
 
     if (key_c == NULL){
         printf("Erro! A variável %s não está definida! Inclua-a em uma linha de comando ou no arquivo de configuração!\n", key_c);
-
-        if (importance != 0){
-            printf("Fim da execução!\n");
-        }
-
         return -1;
     }
         
@@ -124,11 +118,6 @@ int convert_env(char* key, int importance, int lower, int upper){
 
     if (key_i < lower || key_i > upper){
         printf("Erro! A variável %s deve estar entre %d e %d!\n", key_c, lower, upper);
-
-        if (importance != 0){
-            printf("Fim da execução!\n");
-        }
-
         return -1;
     }
 

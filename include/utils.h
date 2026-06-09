@@ -7,12 +7,12 @@
 #include <string.h>
 #include <time.h>
 
+
 int random_int(int min, int max);
 float random_float(int lower_odds, int upper_odds);
 
 int load_envs(int argc, char *argv[]);
 char *datetime_stamp();
-int convert_env(char* key, int importance, int lower, int upper);
 
 int char_to_int(char method);
 char int_to_char(int method);

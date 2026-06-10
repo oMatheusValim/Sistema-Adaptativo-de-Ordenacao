@@ -1,12 +1,12 @@
 ============= COMPARAÇÃO DA ÁRVORE DE DECISÃO COM UM ALGORITMO ESTÁTICO ============
 
             avg(t)     avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)
-COUNT       0.00002    0           0          0          0          1            
-COUNT       0.00001    0           0          0          0          1            
-HEAP        0.00001    0           0          0          0          0            
-INSERTION   0.00001    0           0          0          0          1            
-MERGE       0.00001    0           0          0          1          1            
-SELECTION   0.00001    0           0          0          0          1            
+COUNT       0.00000    0           0          0          0          1            
+COUNT       0.00000    0           0          0          0          1            
+HEAP        0.00000    0           0          0          0          0            
+INSERTION   0.00000    0           0          0          0          1            
+MERGE       0.00000    0           0          0          1          1            
+SELECTION   0.00000    0           0          0          0          1            
 
 
 ==================================== DISTRIBUIÇÃO DE ALGOTIMOS PELA ÁRVORE DE DECISÃO =============================================

@@ -18,15 +18,12 @@ alg_ctx *find_methods(int algs_count){
         if (atoi(getenv((char[]){algs[j], '\0'})) == 1) {
             arrs[i].method = algs[j];
             i++;
+            
         }
 
         j++;
     }
-    for (int k = 0; k < algs_count; k++)
-    {
-        printf("arrs[%d].method = %c\n", k, arrs[k].method);
-        
-    }
+ 
     
     return arrs;
 

@@ -126,7 +126,9 @@ static int run_analysis(csv_line *cl, alg_ctx *algs, int algs_count, metrics **m
 
             if (algs[j].method == 'A') {
                 method_count[char_to_int(m[j][i].method)]++;
+                
             }
+        
  
             free(algs[j].arr);
             algs[j].arr = NULL;

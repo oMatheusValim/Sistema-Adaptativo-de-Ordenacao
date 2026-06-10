@@ -22,7 +22,7 @@ EQUAL=5
 SEED=
 
 # Detalhes da saída
-VERBOSE=0
+VERBOSE=1
 OUT_TXT=1
 
 

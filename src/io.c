@@ -125,7 +125,7 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
 
     if ((verbose + out_txt) <= 0) return;
 
-    tree_statistics ts[5] = {0, 0, 0, 0, 0};
+    tree_statistics ts[5] = {0};
 
     int method;
 
@@ -165,31 +165,50 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
 
     for (int i = 0; i < 5; i++){
 
-        if (verbose != 0){
+        if (method_count[i] == 0){
+
+            if (verbose)
+            {
+                switch (i){
+                    case 0: printf("%-12s", "COUNT"); break;
+                    case 1: printf("%-12s", "HEAP"); break;
+                    case 2: printf("%-12s", "INSERTION"); break;
+                    case 3: printf("%-12s", "MERGE"); break;
+                    case 4: printf("%-12s", "SORTING"); break;
+                }
+                
+                    printf("    0 - 0.00   -         -         -          -            -           -          -          -          -\n");
+                }
+           
+        }
+          if (out_txt){
+
             switch (i){
-                case 0: printf("%-12s", "COUNT"); break;
-                case 1: printf("%-12s", "HEAP"); break;
-                case 2: printf("%-12s", "INSERTION"); break;
-                case 3: printf("%-12s", "MERGE"); break;
-                case 4: printf("%-12s", "SORTING"); break;
-            
-            if (method_count[i] == 0)
-                printf("    0 - 0.00   -         -         -          -            -           -          -          -          -\n");
-                continue;
+                case 0: fprintf(fptr, "%-12s", "COUNT"); break;
+                case 1: fprintf(fptr, "%-12s", "HEAP"); break;
+                case 2: fprintf(fptr, "%-12s", "INSERTION"); break;
+                case 3: fprintf(fptr, "%-12s", "MERGE"); break;
+                case 4: fprintf(fptr, "%-12s", "SORTING"); break;
             }
 
-            printf("%5d - %-7.2f", method_count[i], (float)method_count[i]/quant);                                                                                                                                                                                                                                                             
-            printf("%-10.5f", ts[i].avg_t/method_count[i]);
-            printf("%-10d", ts[i].avg_n/method_count[i]);
-            printf("%-11d", ts[i].avg_amp/method_count[i]);
-            printf("%-13.3f", ts[i].avg_distr/method_count[i]);
-            printf("%-12lld", ts[i].avg_cmp/method_count[i]);
-            printf("%-11lld", ts[i].avg_mov/method_count[i]);
-            printf("%-11lld", ts[i].avg_mem/method_count[i]);
-            printf("%-11lld", ts[i].avg_rec/method_count[i]);
-            printf("%-13d\n", ts[i].avg_max_depth/method_count[i]);
-
+            fprintf(fptr, "    0 - 0.00   -         -         -          -            -           -          -          -          -\n");
         }
+
+        continue; 
+    
+
+                printf("%5d - %-7.2f", method_count[i], (float)method_count[i]/quant);                                                                                                                                                                                                                                                             
+                printf("%-10.5f", ts[i].avg_t/method_count[i]);
+                printf("%-10d", ts[i].avg_n/method_count[i]);
+                printf("%-11d", ts[i].avg_amp/method_count[i]);
+                printf("%-13.3f", ts[i].avg_distr/method_count[i]);
+                printf("%-12lld", ts[i].avg_cmp/method_count[i]);
+                printf("%-11lld", ts[i].avg_mov/method_count[i]);
+                printf("%-11lld", ts[i].avg_mem/method_count[i]);
+                printf("%-11lld", ts[i].avg_rec/method_count[i]);
+                printf("%-13d\n", ts[i].avg_max_depth/method_count[i]);
+
+        
 
         if (out_txt != 0){
             switch (i){

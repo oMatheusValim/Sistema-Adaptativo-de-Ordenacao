@@ -15,14 +15,19 @@ alg_ctx *find_methods(int algs_count){
     char algs[6] = "ACHIMS";
 
     while (i < algs_count && j < 6){
-        if (atoi(getenv((char[]){algs[i], '\0'})) == 1) {
-            arrs[i].method = algs[i];
+        if (atoi(getenv((char[]){algs[j], '\0'})) == 1) {
+            arrs[i].method = algs[j];
             i++;
         }
 
         j++;
     }
-
+    for (int k = 0; k < algs_count; k++)
+    {
+        printf("arrs[%d].method = %c\n", k, arrs[k].method);
+        
+    }
+    
     return arrs;
 
 }
@@ -40,14 +45,14 @@ int entry_size(char *line){
     int num_colums_csv = 0;
 
     
-    while(line[i] != '\n'){
+    while(line[i] != '\n' && line[i] != '\0'){
         if (line[i] == ',')
             num_colums_csv++;
 
         i++;
     }
 
-    return (num_colums_csv);
+    return (num_colums_csv+1);
 }
 
 //função allocate_arr: converte a linha csv em um vetor de inteiros e o retorna.
@@ -85,7 +90,7 @@ alg_ctx *cpy_arrs(char *line, alg_ctx *arrs, int algs_count){
     arrs[0].size = size;
 
     for (int i = 1; i < algs_count; i++){
-        arrs[i].arr = malloc((size + 1) * sizeof(int));
+        arrs[i].arr = malloc((size) * sizeof(int));
         memcpy(arrs[i].arr, arrs[0].arr, size * sizeof(int));
 
         arrs[i].index = index;

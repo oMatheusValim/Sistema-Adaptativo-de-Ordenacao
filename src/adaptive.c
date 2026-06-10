@@ -1,7 +1,7 @@
 #include "utils/headers/utils.h"
 #include "headers/adaptive.h"
 
-
+//função decision_tree: Árvore de decisão para a escolha do método de ordenação. eretrona struct m do tipo métricas com as métricas de execução do algoritmo escolhido.
 metrics decision_tree(entry_analysis ea, int max_size){
 
     // Para entradas com pouca amplitude de dados, use o counting_sort

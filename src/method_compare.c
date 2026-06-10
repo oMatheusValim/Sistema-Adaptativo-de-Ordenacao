@@ -1,7 +1,7 @@
 #include "utils/headers/utils.h"
 #include "headers/method_compare.h"
 
-
+//função find_methods: obtém do arquivo config.txt quais métodos de ordenação o usuário deseja comparar com a árvore de ordenação. Retorna struct do tipo alg_ctx.
 alg_ctx *find_methods(int algs_count){
 
     alg_ctx *arrs = (alg_ctx *)malloc(algs_count * sizeof(alg_ctx));
@@ -27,6 +27,7 @@ alg_ctx *find_methods(int algs_count){
 
 }
 
+//Função entry_index: Retorna o valor antes da primeira virgula, que representa o index da entrada
 int entry_index(char *line){
     // Retorna o valor antes da primeira virgula, que representa o index da entrada
     char *token = strtok(line, ",");
@@ -34,6 +35,7 @@ int entry_index(char *line){
 
 }
 
+//função entry_size: retorna contagem do numero de colunas no csv, desconsiderando a ultima coluna
 int entry_size(char *line){
     int i = 0;
     int num_colums_csv = 0;
@@ -50,6 +52,7 @@ int entry_size(char *line){
 }
 
 
+//função allocate_arr: converte a linha csv em um vetor de inteiros e o retorna.
 int *allocate_arr(char *line, int n, int index){
 
     // Alocacao do vetor de ints
@@ -73,6 +76,7 @@ int *allocate_arr(char *line, int n, int index){
     return arr;
 }
 
+//função cpy_arrs: copia o array desordenado para a comparação com métodos de ordenação escolhidos manualmente. retorna struct alg_ctx.
 alg_ctx *cpy_arrs(char *line, alg_ctx *arrs, int algs_count){
 
     int index = entry_index(line);

@@ -1,17 +1,17 @@
 #ifndef ALG_H
 #define ALG_H
 
-//cria struct de métricas
+//Armazena as métricas de execução do algoritmos de ordenação
 typedef struct {
     long long int compare;
     long long int movements;
-    long long int chamadas_recursivas;
+    long long int recursive_calls;
     int max_depth;
-    float tempo;
+    float time;
     int memory;
     int stability;
-    int *ordenado;
-    char metodo;
+    int *ordered;
+    char method;
 } metrics;
 
 metrics insertionSort(int arr[], int n);

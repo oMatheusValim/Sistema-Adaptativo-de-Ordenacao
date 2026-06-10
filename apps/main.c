@@ -14,7 +14,6 @@
 #define QUANT_ARQUIVO 500
 
 int main(int argc, char *argv[]) {
-    // 1. Variáveis de Configuração CLI
     bool modo_adaptativo = false;
     char algoritmo[20] = "";
     int tamanho = 0; 
@@ -24,7 +23,6 @@ int main(int argc, char *argv[]) {
     char output_file[256] = "";
     bool verbose = false;
 
-    // 2. Leitura dos Argumentos
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--modo") == 0 && i + 1 < argc) {
             if (strcmp(argv[i+1], "adaptativo") == 0) modo_adaptativo = true;
@@ -63,11 +61,9 @@ int main(int argc, char *argv[]) {
         printf("Seed: %d\n=================================\n\n", seed);
     }
 
-    // 3. Execução baseada na Entrada de Dados
     metrics m = {0}; // Inicializa a struct de métricas
 
     if (strlen(input_file) > 0) {
-        // FLUXO 1: Lendo de um arquivo (como no seu código original)
         if (verbose) printf("Lendo dados do arquivo %s...\n", input_file);
         
         char **lines = read_data_input(input_file, QUANT_ARQUIVO, MAX_NUM, MAX_SIZE);
@@ -134,7 +130,6 @@ int main(int argc, char *argv[]) {
             if (verbose) printf("Iniciando ordenação do array de tamanho %d...\n", tamanho);
 
             if (modo_adaptativo) {
-                // Mockando a entry_analysis para a árvore de decisão funcionar
                 entry_analysis ea;
                 ea.vector = dados;
                 ea.size = tamanho;
@@ -152,10 +147,6 @@ int main(int argc, char *argv[]) {
             printf("Algoritmo executado: %c\n", m.metodo);
             printf("Tempo de execução: %f segundos\n", m.tempo);
             
-            // Caso sua struct metrics tenha essas variáveis, descomente:
-            // printf("Comparações: %lld\n", m.compare);
-            // printf("Movimentações: %lld\n", m.movements);
-
             free(dados);
         }
 
@@ -165,11 +156,9 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // 4. Output em CSV das Métricas (se solicitado)
     if (strlen(output_file) > 0) {
         FILE *f = fopen(output_file, "a");
         if (f) {
-            // Salvando um append básico das métricas no CSV
             fprintf(f, "%c,%d,%f\n", m.metodo, tamanho, m.tempo);
             fclose(f);
             if (verbose) printf("Métricas salvas em %s\n", output_file);

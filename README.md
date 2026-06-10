@@ -55,7 +55,8 @@ O objetivo central não é apenas implementar os algoritmos, mas investigar seu 
 │   ├── algoritmos.h 
 │   ├── entry_analysis.h
 │   ├── execution_analysis.h
-│   └── input_generator.h       # Coleta de métricas de execução
+│   ├── input_generator.h       # Coleta de métricas de execução
+│   └── io.h
 ├── src/
 │   ├── adaptive.c
 │   ├── algoritmos.c

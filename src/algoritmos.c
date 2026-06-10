@@ -93,7 +93,8 @@ void merge(int arr[], int inicio, int meio, int fim, metrics *m){
     int *L = malloc(n1 * sizeof(int));
     int *R = malloc(n2 * sizeof(int));
 
-    m->memory += (n1 + n2)*sizeof(int);
+    int current_memory = (n1 + n2) * sizeof(int);
+    if(current_memory > m->memory) m->memory = current_memory;
 
     if (m == NULL){
         printf("Ponteiro Metrics é NULL");

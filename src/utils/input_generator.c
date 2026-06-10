@@ -56,7 +56,7 @@ int *random_sorted_arr(int max_num, int max_size){
         int has_negative = atoi(getenv("NEGATIVE"));
         int negative = random_int(0, 101);
 
-        int min = (negative > has_negative) ? random_int(0, (max_num-amp)) : random_int(-1 * max_num + 1, 1);
+        int min = (negative < has_negative) ? random_int(0, (max_num-amp)) : random_int(-1 * max_num + 1, 1);
         int max = (amp > 0) ? min + amp : min + 1;
 
         if (max >= max_num)
@@ -119,7 +119,7 @@ int *random_reverse_arr(int max_num, int max_size){
         int has_negative = atoi(getenv("NEGATIVE"));
         int negative = random_int(0, 101);
 
-        int min = (negative > has_negative) ? random_int(0, (max_num-amp)) : random_int(-1 * max_num + 1, 1);
+        int min = (negative < has_negative) ? random_int(0, (max_num-amp)) : random_int(-1 * max_num + 1, 1);
         int max = (amp > 0) ? min + amp : min + 1;
 
         if (max >= max_num)

@@ -181,6 +181,7 @@ int main(int argc, char *argv[]){
 
     
     adaptive_comparison(m, quant, algs_count, verbose, out_txt);
+
     for (int i = 0; i < algs_count; i++) {
         if (algs[i].method == 'A') {
             decision_tree_statistics(ea, m[i], method_count, quant, verbose, out_txt);
@@ -188,7 +189,7 @@ int main(int argc, char *argv[]){
     }
 
 
-    if (verbose != 0) printf("Liberando memória ...\n");
+    if (verbose != 0) printf("\nLiberando memória ...\n");
     free(algs);
     free(ea);
     free_metrics(m, algs_count);

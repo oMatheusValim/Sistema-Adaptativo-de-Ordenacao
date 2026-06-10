@@ -23,10 +23,8 @@ all:
 	gcc -c $(SRC)$(MC).c     -I $(HEADERS)/  -o $(OBJ)$(MC).o
 	gcc $(SRC)/main.c $(OBJ)$(UTL).o $(OBJ)$(CFG).o $(OBJ)$(IO).o $(OBJ)$(IG).o $(OBJ)$(EA).o $(OBJ)$(ALG).o $(OBJ)$(ADP).o $(OBJ)$(MC).o -I $(HEADERS) -o $(OBJ)/run.exe -lm
 
-
 run:
 	$(OBJ)/run.exe
-
 
 val:
 	gcc -c $(UTILS)$(UTL).c  -I $(HEADERS)/  -o $(OBJ)$(UTL).o
@@ -44,4 +42,4 @@ run_val:
 
 clean:
 	rm $(OBJ)/*.o
-	rm $(BIN)/*.exe
+	rm $(OBJ)/*.exe

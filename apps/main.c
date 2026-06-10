@@ -5,8 +5,10 @@
 #include "method_analysis.h"
 #include "config.h"
 
-int verbose;
+//Variável verbose: definida na linha de comando, 1 se a tabela de características de execução será impressa no terminal, 0 se não será impressa.
+int verbose; 
 
+//função generate_and_write_csv: gera e escreve arquivo csv contendo vetores desordenados randômicos.
 static int generate_and_write_csv( char *csv_path, int quant, int max_size, int max_num){
     
     if (verbose != 0) printf("Gerando os dados aleatoriamente ...\n");
@@ -27,7 +29,7 @@ static int generate_and_write_csv( char *csv_path, int quant, int max_size, int 
     return 0;
 }
 
-
+//função resolve_csv: verifica se o csv_file a ser ordenado foi definido dentro do arquivo config.csv caso não tenha sido, lê os parâmetros definidos no arquivo para geração de um novo arquivo csv.
 static char *resolve_csv(int *out_quant, int *out_max_size, int *out_max_num){
 
     char *env_csv = getenv("CSV_FILE");
@@ -39,14 +41,15 @@ static char *resolve_csv(int *out_quant, int *out_max_size, int *out_max_num){
     int max_num  = convert_env("MAX_NUM", 100, 100000); if (max_num  < 0) return NULL;
     int max_size = convert_env("MAX_SIZE", 10,  25000); if (max_size < 0) return NULL;
  
-    char *csv_path = malloc(64);
+    char *csv_path = (char*) malloc(64 * sizeof(char));
     if (csv_path == NULL){
         printf("Erro! Falha na alocação de memória para a análise.\n"); 
         
         return NULL;
     }
-
-    snprintf(csv_path, 64, "%s.csv", datetime_stamp());
+    char *date = datetime_stamp();
+    snprintf(csv_path, 64, "%s.csv", date);
+    free(date);
  
     if (generate_and_write_csv(csv_path, quant, max_size, max_num) < 0) {
         free(csv_path);
@@ -61,7 +64,7 @@ static char *resolve_csv(int *out_quant, int *out_max_size, int *out_max_num){
     return csv_path;
 }
 
-
+//função alloc_metrics: aloca dinâmicamento as métricas de execução de cada um dos vetores randômicos criados para cada algoritmo de ordenação executado.
 static metrics **alloc_metrics(int algs_count, int quant){
     metrics **m = calloc(algs_count, sizeof(metrics *));
     if (m == NULL) return NULL;
@@ -78,7 +81,7 @@ static metrics **alloc_metrics(int algs_count, int quant){
     return m;
 }
 
-
+//função free_metrics: libera o espaço alocdo para as métricas de execução de cada um dos vetores para cada algoritmo de ordenação executado.
 static void free_metrics(metrics **m, int algs_count){
     if (m == NULL) return;
 
@@ -89,6 +92,7 @@ static void free_metrics(metrics **m, int algs_count){
     free(m);
 }
 
+//função run_algorithm: utiliza o algoritmo escolhido para a ordenação do vetor.
 static metrics run_algorithm(alg_ctx *alg, entry_analysis *ea_out, int max_size){
     switch (alg->method) {
         case 'A':
@@ -103,6 +107,7 @@ static metrics run_algorithm(alg_ctx *alg, entry_analysis *ea_out, int max_size)
     }
 }
 
+//função run_analysis: faz a ordenação e obtém os parâmetros de execução do algoritmo escolhido para cada vetor no arquivo csv.
 static int run_analysis(csv_line *cl, alg_ctx *algs, int algs_count, metrics **m, entry_analysis *ea, int method_count[6]){
  
     for (int i = 0; i < cl->quant; i++) {
@@ -117,10 +122,10 @@ static int run_analysis(csv_line *cl, alg_ctx *algs, int algs_count, metrics **m
             m[j][i] = run_algorithm(&algs[j], &ea[i], cl->max_size);
  
             if (verify_sort(algs[j].arr, algs[j].size) < 0)
-                printf("Erro! O algoritmo %c não ordenou corretamente o vetor #%d\n", m[j][i].metodo, algs[j].index);
+                printf("Erro! O algoritmo %c não ordenou corretamente o vetor #%d\n", m[j][i].method, algs[j].index);
 
             if (algs[j].method == 'A') {
-                method_count[char_to_int(m[j][i].metodo)]++;
+                method_count[char_to_int(m[j][i].method)]++;
             }
  
             free(algs[j].arr);
@@ -131,7 +136,7 @@ static int run_analysis(csv_line *cl, alg_ctx *algs, int algs_count, metrics **m
     return 0;
 }
 
-
+//função main: obtém as constantes digitadas na linha de comando/arquivo config.txt e chama as funções necessárias para execução completa do código.
 int main(int argc, char *argv[]){    
 
     int algs_count = load_envs(argc, argv);

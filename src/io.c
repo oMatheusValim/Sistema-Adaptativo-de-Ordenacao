@@ -1,6 +1,7 @@
 #include "utils.h"
 #include "io.h"
 
+//função write_csv: escreve arquivo .csv compsoto por vetores randômicos em cada uma das linhas.
 int write_csv(int **arrs, char* filename, int quant, int max_size, int max_num){
     FILE *fptr;
 
@@ -35,7 +36,7 @@ int write_csv(int **arrs, char* filename, int quant, int max_size, int max_num){
     return 1;
 }
 
-
+// função read_csv: lê o arquivo csv retornando cada uma de suas linhas.
 csv_line read_csv(char* file_name){
 
     csv_line cl = {0};
@@ -53,8 +54,8 @@ csv_line read_csv(char* file_name){
 
     char temp_buffer[40];
 
-    fgets(temp_buffer, 35, fptr); // Linha de header
-    fgets(temp_buffer, 35, fptr); // Linha com constantes importantes
+    fgets(temp_buffer, 35, fptr); // tira linha de header
+    fgets(temp_buffer, 35, fptr); // tira linha com constantes importantes
 
     int quant;
     int max_size;
@@ -119,7 +120,7 @@ csv_line read_csv(char* file_name){
     return cl;
 }
 
-
+//função decision_tree_statistics: retorna as estatísticas da árvore de decisão dentro de uma tabela.
 void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count, int quant, int verbose, int out_txt){
 
     if ((verbose + out_txt) <= 0) return;
@@ -129,16 +130,16 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
     int method;
 
     for (int i = 0; i < quant; i++){
-        method = char_to_int(m[i].metodo);
+        method = char_to_int(m[i].method);
 
-        ts[method].avg_t += m[i].tempo;
+        ts[method].avg_t += m[i].time;
         ts[method].avg_n += ea[i].size;
         ts[method].avg_amp += ea[i].amp;
         ts[method].avg_distr += ea[i].distr.disorder;
         ts[method].avg_cmp += m[i].compare;
         ts[method].avg_mov += m[i].movements;
         ts[method].avg_mem += m[i].memory;
-        ts[method].avg_rec += m[i].chamadas_recursivas;
+        ts[method].avg_rec += m[i].recursive_calls;
         ts[method].avg_max_depth += m[i].max_depth;
     }
 
@@ -148,7 +149,6 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
         printf("            count - %%      avg(t)    avg(n)    avg(amp)   avg(distr)   avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
     }
 
-    // Abre o arquivo .txt para salvar a tabela
     FILE *fptr;
 
     if (out_txt != 0){
@@ -159,7 +159,6 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
             return;
         }
 
-        //o que vai pro txt é o fprintf
         fprintf(fptr, "\n\n==================================== DISTRIBUIÇÃO DE ALGOTIMOS PELA ÁRVORE DE DECISÃO =============================================\n\n");
         fprintf(fptr, "            count - %%      avg(t)    avg(n)    avg(amp)   avg(distr)   avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
     }
@@ -214,10 +213,8 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
         }
     }
 
-    //Fechamento do arquivo
     if (out_txt != 0) fclose(fptr);
 }
-
 
 void adaptive_comparison(metrics **m, int quant, int algs_count, int verbose, int out_txt){
 
@@ -226,7 +223,7 @@ void adaptive_comparison(metrics **m, int quant, int algs_count, int verbose, in
     adaptive_statistics as[algs_count];
 
     for (int i = 0; i < algs_count; i++){
-        as[i].method = m[i][0].metodo;
+        as[i].method = m[i][0].method;
         as[i].avg_cmp = 0;
         as[i].avg_max_depth = 0;
         as[i].avg_mem = 0;
@@ -236,15 +233,15 @@ void adaptive_comparison(metrics **m, int quant, int algs_count, int verbose, in
     
         for (int j = 0; j < quant; j++){
 
-            if (m[i][j].metodo != as[i].method){
+            if (m[i][j].method != as[i].method){
                 as[i].method = 'a';
             }
 
-            as[i].avg_t += m[i][j].tempo;
+            as[i].avg_t += m[i][j].time;
             as[i].avg_cmp += m[i][j].compare;
             as[i].avg_mov += m[i][j].movements;
             as[i].avg_mem += m[i][j].memory;
-            as[i].avg_rec += m[i][j].chamadas_recursivas;
+            as[i].avg_rec += m[i][j].recursive_calls;
             as[i].avg_max_depth += m[i][j].max_depth;
         }
     }
@@ -256,7 +253,7 @@ void adaptive_comparison(metrics **m, int quant, int algs_count, int verbose, in
 
     FILE *fptr;
     if (out_txt != 0){
-        // Abre o arquivo .txt para salvar a tabela
+
         fptr = fopen("resultados.txt", "w");
         if (fptr == NULL) {
             printf("Erro ao criar o arquivo tabela_resultados.txt!\n");
@@ -308,6 +305,5 @@ void adaptive_comparison(metrics **m, int quant, int algs_count, int verbose, in
         }
     }
 
-    //Fechamento do arquivo
     if (out_txt != 0) fclose(fptr);
 }

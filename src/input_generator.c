@@ -1,7 +1,7 @@
 #include "utils.h"
 #include "input_generator.h"
 
-
+//função random_arr: cria e retorna vetor randômico de entrada para ordenação.
 int *random_arr(int max_num, int max_size){
 
     // Decide o tamanho do vetor
@@ -37,7 +37,7 @@ int *random_arr(int max_num, int max_size){
     return arr;
 }
 
-
+// cria e retorna veotr randômico ordenado para ordenação.
 int *random_sorted_arr(int max_num, int max_size){
 
     // Decide o tamanho do vetor
@@ -100,7 +100,7 @@ int *random_sorted_arr(int max_num, int max_size){
     return arr;
 }
 
-
+//cria e retorna vetor ordenado em ordem decrescente para ordenação.
 int *random_reverse_arr(int max_num, int max_size){
 
     // Decide o tamanho do vetor
@@ -163,7 +163,7 @@ int *random_reverse_arr(int max_num, int max_size){
     return arr;
 }
 
-
+//cria e retorna vetor randômico preenchido apenas por números iguais para ordenação.
 int *random_equal_arr(int max_num, int max_size){
 
     // Decide o tamanho do vetor
@@ -192,7 +192,7 @@ int *random_equal_arr(int max_num, int max_size){
     return arr;
 }
 
-
+// cria vetor randômico que obedeça condições adversariais para melhor teste da árvore de decisão.
 int *random_adversarial_arr(int max_num, int max_size){
 
     // Escolhe o tamanho do vetor
@@ -276,9 +276,10 @@ int *random_adversarial_arr(int max_num, int max_size){
     return arr;
 }
 
-
+//cria e retorna conjunto de vetores de entrada para ordenação utilizando condições adversariais para garantir teste eficaz da árvore de decisão.
 int **create_arrs(int quant, int max_size, int max_num){
 
+    
     int seed = (getenv("SEED") != NULL) ? atoi(getenv("SEED")) : (int)time(NULL);
     srand(seed); 
 

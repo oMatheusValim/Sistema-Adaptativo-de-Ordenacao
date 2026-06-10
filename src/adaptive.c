@@ -1,7 +1,7 @@
 #include "utils.h"
 #include "adaptive.h"
 
-
+//Árvore de decisão para a escolha do método de ordenação.
 metrics decision_tree(entry_analysis ea, int max_size){
 
     // Para entradas com pouca amplitude de dados, use o counting_sort

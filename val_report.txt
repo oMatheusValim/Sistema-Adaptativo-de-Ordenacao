@@ -1,14 +1,115 @@
-==122917== Memcheck, a memory error detector
-==122917== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==122917== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
-==122917== Command: bin/run.exe
-==122917== Parent PID: 122916
-==122917== 
-==122917== 
-==122917== HEAP SUMMARY:
-==122917==     in use at exit: 0 bytes in 0 blocks
-==122917==   total heap usage: 1,209,852 allocs, 1,209,852 frees, 72,620,015 bytes allocated
-==122917== 
-==122917== All heap blocks were freed -- no leaks are possible
-==122917== 
-==122917== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==83965== Memcheck, a memory error detector
+==83965== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==83965== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==83965== Command: bin/run.exe
+==83965== Parent PID: 83964
+==83965== 
+==83965== Invalid read of size 4
+==83965==    at 0x10C5D1: entry_amp (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x10CAAF: analyse_entry (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x1099D6: run_algorithm (main.c:99)
+==83965==    by 0x109C82: run_analysis (main.c:122)
+==83965==    by 0x10A106: main (main.c:181)
+==83965==  Address 0x4b63220 is 0 bytes after a block of size 0 alloc'd
+==83965==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==83965==    by 0x10EABE: allocate_arr (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x10EBAF: cpy_arrs (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x109BEE: run_analysis (main.c:119)
+==83965==    by 0x10A106: main (main.c:181)
+==83965== 
+==83965== Invalid read of size 4
+==83965==    at 0x10C5E5: entry_amp (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x10CAAF: analyse_entry (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x1099D6: run_algorithm (main.c:99)
+==83965==    by 0x109C82: run_analysis (main.c:122)
+==83965==    by 0x10A106: main (main.c:181)
+==83965==  Address 0x4b63220 is 0 bytes after a block of size 0 alloc'd
+==83965==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==83965==    by 0x10EABE: allocate_arr (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x10EBAF: cpy_arrs (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x109BEE: run_analysis (main.c:119)
+==83965==    by 0x10A106: main (main.c:181)
+==83965== 
+==83965== Invalid read of size 1
+==83965==    at 0x10EA8A: entry_size (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x10EB98: cpy_arrs (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x109BEE: run_analysis (main.c:119)
+==83965==    by 0x10A106: main (main.c:181)
+==83965==  Address 0x4f2bce6 is 0 bytes after a block of size 4,998 alloc'd
+==83965==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==83965==    by 0x10A9CA: read_csv (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x109FC1: main (main.c:157)
+==83965== 
+==83965== Invalid read of size 1
+==83965==    at 0x10EA6E: entry_size (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x10EB98: cpy_arrs (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x109BEE: run_analysis (main.c:119)
+==83965==    by 0x10A106: main (main.c:181)
+==83965==  Address 0x4f2bce6 is 0 bytes after a block of size 4,998 alloc'd
+==83965==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==83965==    by 0x10A9CA: read_csv (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x109FC1: main (main.c:157)
+==83965== 
+==83965== 
+==83965== HEAP SUMMARY:
+==83965==     in use at exit: 0 bytes in 0 blocks
+==83965==   total heap usage: 987,103 allocs, 987,103 frees, 38,590,823 bytes allocated
+==83965== 
+==83965== All heap blocks were freed -- no leaks are possible
+==83965== 
+==83965== ERROR SUMMARY: 150 errors from 4 contexts (suppressed: 0 from 0)
+==83965== 
+==83965== 1 errors in context 1 of 4:
+==83965== Invalid read of size 4
+==83965==    at 0x10C5E5: entry_amp (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x10CAAF: analyse_entry (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x1099D6: run_algorithm (main.c:99)
+==83965==    by 0x109C82: run_analysis (main.c:122)
+==83965==    by 0x10A106: main (main.c:181)
+==83965==  Address 0x4b63220 is 0 bytes after a block of size 0 alloc'd
+==83965==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==83965==    by 0x10EABE: allocate_arr (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x10EBAF: cpy_arrs (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x109BEE: run_analysis (main.c:119)
+==83965==    by 0x10A106: main (main.c:181)
+==83965== 
+==83965== 
+==83965== 1 errors in context 2 of 4:
+==83965== Invalid read of size 4
+==83965==    at 0x10C5D1: entry_amp (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x10CAAF: analyse_entry (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x1099D6: run_algorithm (main.c:99)
+==83965==    by 0x109C82: run_analysis (main.c:122)
+==83965==    by 0x10A106: main (main.c:181)
+==83965==  Address 0x4b63220 is 0 bytes after a block of size 0 alloc'd
+==83965==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==83965==    by 0x10EABE: allocate_arr (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x10EBAF: cpy_arrs (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x109BEE: run_analysis (main.c:119)
+==83965==    by 0x10A106: main (main.c:181)
+==83965== 
+==83965== 
+==83965== 74 errors in context 3 of 4:
+==83965== Invalid read of size 1
+==83965==    at 0x10EA6E: entry_size (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x10EB98: cpy_arrs (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x109BEE: run_analysis (main.c:119)
+==83965==    by 0x10A106: main (main.c:181)
+==83965==  Address 0x4f2bce6 is 0 bytes after a block of size 4,998 alloc'd
+==83965==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==83965==    by 0x10A9CA: read_csv (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x109FC1: main (main.c:157)
+==83965== 
+==83965== 
+==83965== 74 errors in context 4 of 4:
+==83965== Invalid read of size 1
+==83965==    at 0x10EA8A: entry_size (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x10EB98: cpy_arrs (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x109BEE: run_analysis (main.c:119)
+==83965==    by 0x10A106: main (main.c:181)
+==83965==  Address 0x4f2bce6 is 0 bytes after a block of size 4,998 alloc'd
+==83965==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==83965==    by 0x10A9CA: read_csv (in /home/thais_lind/trabalhoED2/Sistema-Adaptativo-de-Ordenacao/bin/run.exe)
+==83965==    by 0x109FC1: main (main.c:157)
+==83965== 
+==83965== ERROR SUMMARY: 150 errors from 4 contexts (suppressed: 0 from 0)

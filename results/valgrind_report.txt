@@ -1,0 +1,14 @@
+==171000== Memcheck, a memory error detector
+==171000== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==171000== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==171000== Command: ./obj//run.exe
+==171000== Parent PID: 170999
+==171000== 
+==171000== 
+==171000== HEAP SUMMARY:
+==171000==     in use at exit: 0 bytes in 0 blocks
+==171000==   total heap usage: 1,167,595 allocs, 1,167,595 frees, 51,920,928 bytes allocated
+==171000== 
+==171000== All heap blocks were freed -- no leaks are possible
+==171000== 
+==171000== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

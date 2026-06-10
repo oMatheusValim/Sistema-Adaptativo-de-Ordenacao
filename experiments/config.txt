@@ -8,7 +8,7 @@ S=1
 
 # Detalhes da entrada
 CSV_FILE=
-QUANT=1500
+QUANT=300
 MAX_SIZE=4000
 MAX_NUM=5000
 

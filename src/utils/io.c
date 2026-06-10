@@ -14,21 +14,18 @@ int write_csv(int **arrs, char* filename, int quant, int max_size, int max_num){
     fprintf(fptr, "index,nums...\n");
     fprintf(fptr, "%dQ, %dS, %dN\n", quant, max_size, max_num);
     for (int i = 0; i < quant; i++){
+        long pos_start = ftell(fptr);
         fprintf(fptr, "%d,", i);
 
         int j = 0;
-
-        while(arrs[i][j] <= max_num){
-            if (arrs[i][j+1] <= max_num)
-                fprintf(fptr, "%d,", arrs[i][j]);
-
-            else{
-                fprintf(fptr, "%d\n", arrs[i][j]);
-                break;
-            }
-
+        while (arrs[i][j] <= max_num){
+            fprintf(fptr, "%d,", arrs[i][j]);
             j++;
         }
+
+        // overwrite the trailing comma with \n
+        fseek(fptr, -1, SEEK_CUR);
+        fprintf(fptr, "\n");
     }
 
     fclose(fptr);
@@ -84,30 +81,33 @@ csv_line read_csv(char* file_name){
         return cl;
     }
 
-    int buffers_size = max_size*(((int)log10(max_num)) + 2);
-    char buffer[buffers_size];
-    char **lines = (char **)malloc((quant) * sizeof(char *));
+    int digits = (int)log10(max_num) + 1;
+    int buffers_size = (max_size + 1) * (digits + 1) + 16;
+
+    char **lines = (char **)calloc((quant), sizeof(char *));
 
     if (lines == NULL){
         printf("Erro! Não foi possível alocar memoria para o texto do csv!\n");
         return cl;
     }
 
+    char *buffer = NULL;
+    size_t buf_cap = 0;
+
     int i = 0;
-    while (fgets(buffer, buffers_size-2, fptr) != NULL && i < quant) {
-
+    while (getline(&buffer, &buf_cap, fptr) != -1 && i < quant) {
         int length = strlen(buffer);
-        lines[i] = malloc((length + 1) * sizeof(char));
+        lines[i] = (char *)calloc((length + 1), sizeof(char));
 
-        if (lines[i] != NULL){
+        if (lines[i] != NULL)
             strcpy(lines[i], buffer);
-        }
-
-        else{
+        else
             printf("Erro ao alocar a linha [%d]!\n", i);
-        }
+
         i++;
     }
+
+    free(buffer);
 
     fclose(fptr);
 

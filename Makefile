@@ -38,7 +38,7 @@ val:
 	gcc -g -O0 $(SRC)/main.c $(OBJ)$(UTL).o $(OBJ)$(CFG).o $(OBJ)$(IO).o $(OBJ)$(IG).o $(OBJ)$(EA).o $(OBJ)$(ALG).o $(OBJ)$(ADP).o $(OBJ)$(MC).o -I $(HEADERS) -o $(OBJ)/run.exe -lm
 
 run_val:
-	valgrind -s --log-file="results/val_report.txt" --leak-check=full --show-leak-kinds=all --track-origins=yes $(OBJ)//run.exe
+	valgrind -s --log-file="results/valgrind_report.txt" --leak-check=full --show-leak-kinds=all --track-origins=yes $(OBJ)//run.exe
 
 clean:
 	rm $(OBJ)/*.o

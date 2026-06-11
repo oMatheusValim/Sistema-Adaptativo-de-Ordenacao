@@ -175,8 +175,8 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
                 case 2: printf("%-12s", "INSERTION"); break;
                 case 3: printf("%-12s", "MERGE"); break;
                 case 4: printf("%-12s", "SORTING"); break;
-            
-            if (method_count[i] == 0)
+            }
+            if (method_count[i] == 0){
                 printf("    0 - 0.00   -         -         -          -            -           -          -          -          -\n");
                 continue;
             }
@@ -201,6 +201,11 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
                 case 2: fprintf(fptr, "%-12s", "INSERTION"); break;
                 case 3: fprintf(fptr, "%-12s", "MERGE"); break;
                 case 4: fprintf(fptr, "%-12s", "SORTING"); break;
+            }
+
+            if (method_count[i] == 0){
+                fprintf(fptr, "    0 - 0.00   -         -         -          -            -           -          -          -          -\n");
+                continue;
             }
 
             fprintf(fptr, "%5d - %-7.2f", method_count[i], (float)method_count[i]/quant);                                                                                                                                                                                                                                                             

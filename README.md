@@ -21,26 +21,26 @@
 
 ## Descrição do Projeto
 
-Este projeto implementa um **sistema adaptativo de ordenação** em linguagem C. Em vez de aplicar sempre o mesmo algoritmo, o sistema analisa características da entrada — tamanho, grau de desordem e amplitude — e seleciona automaticamente o algoritmo de ordenação mais adequado para aquele cenário.
+Este projeto implementa um **sistema adaptativo de ordenação** em linguagem C. Dada uma entrada composta por vetores inteiros randômicos, o sistema analisa características da entrada — tamanho, grau de desordem e amplitude — e, em vez de utilizar um algorimto de ordenação fixo, seleciona automaticamente o algoritmo de ordenação mais eficiente.
 
-O objetivo central não é apenas implementar os algoritmos, mas investigar seu comportamento experimental, construir heurísticas de seleção bem justificadas e avaliar criticamente as decisões do sistema.
+O objetivo deste projeto não é apenas implementar os algoritmos ou uma árvore de decisão, mas investigar seu comportamento experimental, construir heurísticas de seleção bem justificadas e avaliar criticamente as decisões do sistema.
 
 ---
 
 ## Algoritmos Implementados
 
-### O(n²)
+### Complexidade O(n²)
 - **Insertion Sort**
 - **Selection Sort** 
 
-### O(n log n)
+### Complexidade O(n log n)
 - **Merge Sort**
 - **Heap Sort** 
 
-### Alternativo
-- **Counting Sort** *(algoritmo não-comparativo, linear para inteiros com amplitude reduzida)*
+### Algoritmo alternativo
+- **Counting Sort** *(algoritmo não-comparativo, linear para vetores compostos por inteiros com amplitude numérica reduzida)*
 
-> ℹ️ A justificativa detalhada para a escolha de cada algoritmo, bem como as heurísticas de seleção, está disponível no relatório do projeto.
+> ℹ️ A justificativa detalhada das heurísticas de seleção de algoritmos está disponível no relatório do projeto.
 
 ---
 ```
@@ -96,7 +96,7 @@ Caso não queira usar o Valgrind, o comando de compilação é ```make```
 
 Caso queira usar o Valgrind, o comando de compilação é ```make val```
 
-Obs: Uma vez que o Valgrind intercepta cada etapa da execução com o intuito de achar vazamentos de memória, além de outros erros, **a execução com ele é muito mais lenta do que sem**. Entretanto, para um projeto desse vigor, que aloca muito memória dinamicamente, o seu uso foi essencial ao longo do desenvolvimento do código para se assegurar o correto tratamento da pilha de memória, e recomendamos ao usuário que o utilize para também se certificar que o progama roda sem vazar memória e sem gerar erros que muitas vezes passam despercebidos ao utilizar apenas o gcc.
+Obs: Uma vez que o Valgrind intercepta cada etapa da execução com o intuito de achar vazamentos de memória, além de outros erros, **a execução com ele é muito mais lenta**. Entretanto, para um projeto desse vigor, que aloca muito memória dinamicamente, o seu uso foi essencial ao longo do desenvolvimento do código para se assegurar o correto tratamento da pilha de memória, e recomendamos ao usuário que o utilize para também se certificar que o progama roda sem vazar memória e sem gerar erros que muitas vezes passam despercebidos ao utilizar apenas o gcc.
 
 ### Limpar
 
@@ -108,9 +108,9 @@ make clean
 
 ## Executar
 
-O sistema possui um arquivo texto de configuração ([experiments/config.txt](experiments/config.txt)) que simula um .env. Nele, estão contidos os parâmetros de execução padrão. Se o usuário providenciar, por linha de comando, qualquer um dos parâmetros dispostos no config na hora de executar, o sistema **sempre dará preferência para o que estiver definido na linha de comando** antes de utilizar os valores default do config.
+O sistema possui um arquivo texto de configuração ([experiments/config.txt](experiments/config.txt)) que simula um arquivo .env. Neste arquivo estão contidos os parâmetros de execução padrão. Se o usuário informar, por linha de comando, qualquer um dos parâmetros dispostos no config na hora de executar, o sistema **dará preferência para as definições contidas na linha de comando** antes de utilizar os valores default do config.
 
-Para mudar vários parâmetros a cada execução, recomenda-se que o usuário modifique o config.txt para incluir as suas preferências e assim evitar um comando de execução muito longo. Para mudar poucos parâmetros por execução, os comandos de linha tendem a ser mais práticos.
+Caso deseje mudar vários parâmetros a cada execução, recomenda-se que o usuário modifique o config.txt para incluir as suas preferências e assim evitar um comando de execução muito longo. Caso deseje mudar poucos parâmetros por execução, os comandos de linha tendem a ser mais práticos.
 
 ### Resumo dos parâmetros disponíveis
 
@@ -128,7 +128,7 @@ Para mudar vários parâmetros a cada execução, recomenda-se que o usuário mo
 | `VERBOSE=<bool>` | Ativa (`bool`=1) ou desativa (`bool`=0) os prints no terminal que caracterizam a execução |
 | `OUT_TXT=<bool>` | Ativa (`bool`=1) ou desativa (`bool`=0) o arquivo txt de resultados no fim da execução |
 
-Observação: todos os exemplos à frente de como usar as linhas de comando usam o `make run`, que não utiliza o Valgrind, para rodar o executável. Se o usuário compilar com o Valgrind, da maneira que foi descrita acima, use o comando `make run_val` para incluir o relatório do Valgrind na saída.
+Observação: todos os exemplos a seguir de como utilizar as linhas de comando utilizam o `make run`, que não utiliza o Valgrind, para rodar o executável. Se o usuário desejar compilar com o Valgrind, deve utilizar o comando `make run_val` para incluir o relatório do Valgrind na saída.
 
 ### Parâmetros de escolha de algoritmo
 
@@ -140,19 +140,19 @@ Há 6 maneiras de se ordenar os vetores de entrada usando o nosso algoritmo:
 - Usar sempre o Merge Sort (M)
 - Usar sempre o Selection Sort (S)
 
-O usuário pode escolher quais destes ele quer utilizar simultâneamente para comparar as suas respectivas eficiências. Para selecionar as opções de algoritmo que ele deseja usar, use o comando de linha ```X=1``` onde X representa um algoritmo que o usuário queira incluir na execução, ou ```Y=0```, onde Y representa um algoritmo que o usuário queira excluir da execução. Exemplos de utilização:
+O usuário pode escolher quais destes algoritmos ele deseja utilizar simultâneamente para comparar as suas respectivas eficiências. Para selecionar as opções de algoritmo desejados, utilize o comando de linha ```X=1``` onde X representa um algoritmo que o usuário deseja incluir na execução, ou ```Y=0```, onde Y representa um algoritmo que o usuário deseja excluir da execução. Exemplos de utilização:
 
 ```bash
-# Usar o sistema adaptativo apenas
+# Usar apenas o sistema adaptativo
 make run A=1 C=0 H=0 I=0 M=0 S=0
 
-# Usar o sistema adaptativo, o counting e o insertion apenas
+# Usar apenas o sistema adaptativo, o counting e o insertion
 make run A=1 C=1 H=0 I=1 M=0 S=0
 
 # Usar todos os os métodos
 make run A=1 C=1 H=1 I=1 M=1 S=1
 
-# Usar o heap e o insertion apenas
+# Usar apenas o heap e o insertion
 make run A=0 C=0 H=1 I=1 M=0 S=0
 
 # Usar o sistema adaptativo, não usar o counting e o merge, a utilização dos outros irá depender do config
@@ -191,13 +191,13 @@ Observações:
 
 ### Parâmetros de logging
 
-Para acompanhar a execução do programa, tão bem quantos os seus resultados, é possível definir 2 parâmetros: `VERBOSE` e `OUT_TXT`:
+Para acompanhar a execução do programa e os seus resultados por meio do terminal, é possível definir 2 parâmetros: `VERBOSE` e `OUT_TXT`:
 
 ```bash
-# Dar prints no terminal ao longo da execução para acompanhar em qual etapa o programa está
+# Imprime (prints) no terminal ao longo da execução para acompanhar o progresso do programa
 make run VERBOSE=1
 
-# Dar gerar o arquivo resultados(time).txt para resumir as metricas dos algoritmos
+# Gera o arquivo resultados(time).txt para apresentar a média de cada metrica dos algoritmos
 make run OUT_TXT=1
 ```
 
@@ -217,19 +217,19 @@ Para cada ordenação, o sistema registra:
 
 ## Heurísticas Adaptativas
 
-O sistema classifica a entrada e escolhe o algoritmo com base nas seguintes regras:
+O sistema classifica a entrada e escolhe o algoritmo com base nas seguintes características:
 
 | Característica detectada | Algoritmo escolhido | Motivo |
 |---|---|---|
 | Entrada com **amplitude pequena** (amp ≤ n) | Counting Sort | Complexidade de tempo O(n + k), linear quando k é pequeno |
-| Entrada de **tamanho pequeno com alta desordem**| Selection Sort | Complexidade de tempo O(n^2) o torna lento demais para entradas maiores e o grau de desordem não impacta a sua execução|
-| Entrada de **tamanho pequeno e média-baixa desordem** | Insertion Sort | Complexidade de tempo O(n^2) o torna lento demais para entradas maiores, mas ele aproveita quando a desordem não é tão alta|
+| Entrada de **tamanho pequeno com alta desordem**| Selection Sort | Complexidade de tempo O(n^2) o torna lento para entradas maiores e o grau de desordem não impacta a sua execução|
+| Entrada de **tamanho pequeno e desordem média-baixa** | Insertion Sort | Complexidade de tempo O(n^2) o torna lento para entradas maiores, mas ele é mais eficiente quando a desordem não é alta|
 | Entrada de **tamanho grande** | Heap Sort | Complexidade de espaço fixa O(1)|
 | Entrada **com alta desordem** | Heap Sort | O grau de desordem não impacta a sua execução |
-| Entrada de **tamanho médio com média desordem** | Merge Sort | O caso base que aproveita quando o vetor já está um pouco ordenado, e não tão grande |
+| Entrada de **tamanho médio com média desordem** | Merge Sort | O caso base mais eficiente para um vetor de entrada que já está um pouco ordenado e não é tão grande |
 
 
-> ℹ️ Os limiares exatos e a justificativa experimental para cada regra estão detalhados no relatório.
+> ℹ️ Os limiares exatos utilizados e as justificativas para cada regra estão detalhados no relatório.
 
 ---
 
@@ -254,8 +254,8 @@ O script irá:
 - Aleatória
 - Ordenada
 - Reversamente ordenada
-- Todos elementos repetidos
-- Entradas pequenas e grandes
+- Composta apenas por elementos iguais,
+- Pequenas e grandes
 - **Entradas adversariais** (casos que exploram limitações do sistema adaptativo)
 
 ---
@@ -272,11 +272,11 @@ O script irá:
 
 O relatório completo em PDF está disponível em `report/relatorio.pdf` e contém:
 
-- Introdução e descrição do sistema
-- Arquitetura e heurísticas
+- Introdução
+- Arquitetura do sistema
 - Metodologia experimental
-- Resultados com gráficos e análise crítica
+- Resultados
 - Reflexão sobre uso de ferramentas de IA
-- Conclusões
+- Conclusão
 
 ---

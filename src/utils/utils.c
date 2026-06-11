@@ -5,7 +5,7 @@ char *datetime_stamp(){
     struct tm *time_info = localtime(&raw_time);
     
     char *buffer = (char *)malloc(80*sizeof(char));
-    strftime(buffer, 80, "%Y_%m_%d_%H_%M_%S", time_info);
+    strftime(buffer, 80, "%H-%M-%S", time_info);
 
     return buffer;
 }

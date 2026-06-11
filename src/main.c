@@ -34,7 +34,20 @@ static char *resolve_csv(int *out_quant, int *out_max_size, int *out_max_num){
 
     char *env_csv = getenv("CSV_FILE");
     if (env_csv != NULL && env_csv[0] != '\0') {
-        return strdup(env_csv);
+
+        char *valid = strstr(env_csv, "entrada"); if (valid == NULL){ 
+            printf("Arquivo de entrada inválido)");
+            return NULL;
+        }
+
+        valid = strstr(env_csv, ".csv"); if (valid == NULL){ 
+            printf("Arquivo de entrada inválido");
+            return NULL;
+        }
+
+        char csv_full[100];
+        sprintf(csv_full, "experiments/datasets/%s", env_csv);
+        return strdup(csv_full);
     }
  
     int quant = convert_env("QUANT", 1, 80000); if (quant < 0) return NULL;
@@ -49,7 +62,7 @@ static char *resolve_csv(int *out_quant, int *out_max_size, int *out_max_num){
     }
 
     char* date_time = datetime_stamp();
-    snprintf(csv_path, 64, "experiments/datasets/%s.csv", date_time);
+    snprintf(csv_path, 64, "experiments/datasets/entrada(%s).csv", date_time);
     free(date_time);
  
     if (generate_and_write_csv(csv_path, quant, max_size, max_num) < 0) {

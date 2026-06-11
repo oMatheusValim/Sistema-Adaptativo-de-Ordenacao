@@ -19,8 +19,6 @@ SRT=8
 R_SRT=8
 EQUAL=4
 
-SEED=
-
 # Detalhes da saída
 VERBOSE=1
 OUT_TXT=1

@@ -279,8 +279,7 @@ int *random_adversarial_arr(int max_num, int max_size){
 
 int **create_arrs(int quant, int max_size, int max_num){
 
-    int seed = (getenv("SEED") != NULL) ? atoi(getenv("SEED")) : (int)time(NULL);
-    srand(seed); 
+    srand(time(NULL)); 
 
     int **arrs = (int**)malloc(quant * sizeof(int *));
 

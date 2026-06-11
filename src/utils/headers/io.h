@@ -40,5 +40,6 @@ csv_line read_csv(char* file_name);
 int write_csv(int **arrs, char* filename, int quant, int max_size, int max_num);
 void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count, int quant, int verbose, int out_txt);
 void adaptive_comparison(metrics **m, int quant, int algs_count, int verbose, int out_txt);
+void print_progress_bar(int current, int total);
 
 #endif

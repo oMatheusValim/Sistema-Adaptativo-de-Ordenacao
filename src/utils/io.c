@@ -8,7 +8,7 @@ int write_csv(int **arrs, char* filename, int quant, int max_size, int max_num){
     fptr = fopen(filename, "w");
 
     if (fptr == NULL) {
-        printf("Erro ao abrir o arquivo de entrada\n");
+        printf("ERRO! Não foi possível abrir o arquivo de entrada (write_csv)\n");
         return -1;
     }
 
@@ -45,7 +45,7 @@ csv_line read_csv(char* file_name){
     fptr = fopen(file_name, "r");
 
     if (fptr == NULL) {
-        printf("Erro! Não foi possível abrir o arquivo %s para leitura!\n", file_name);
+        printf("ERRO! Não foi possível abrir o arquivo de entrada (read_csv)\n");
         return cl;
     }
 
@@ -62,7 +62,7 @@ csv_line read_csv(char* file_name){
  
     if (token != NULL) quant = atoi(token);    
     else{
-        printf("Erro! Não foi possível identificar o valor de QUANT no arquivo %s!\n", file_name);
+        printf("ERRO! Não foi possível identificar o valor de QUANT no arquivo de entrada %s!\n", file_name);
         return cl;
     }
 
@@ -70,7 +70,7 @@ csv_line read_csv(char* file_name){
 
     if (token != NULL) max_size = atoi(token);
     else{
-        printf("Erro! Não foi possível identificar o valor de MAX_SIZE no arquivo %s!\n", file_name);
+        printf("ERRO! Não foi possível identificar o valor de MAX_SIZE no arquivo de entrada %s!\n", file_name);
         return cl;
     }
 
@@ -78,7 +78,7 @@ csv_line read_csv(char* file_name){
 
     if (token != NULL) max_num = atoi(token);
     else{
-        printf("Erro! Não foi possível identificar o valor de MAX_NUM no arquivo %s!\n", file_name);
+        printf("ERRO! Não foi possível identificar o valor de MAX_NUM no arquivo de entrada %s!\n", file_name);
         return cl;
     }
 
@@ -88,7 +88,7 @@ csv_line read_csv(char* file_name){
     char **lines = (char **)calloc((quant), sizeof(char *));
 
     if (lines == NULL){
-        printf("Erro! Não foi possível alocar memoria para o texto do csv!\n");
+        printf("ERRO! Não foi possível alocar memória (read_csv - 1)\n");
         return cl;
     }
 
@@ -103,7 +103,7 @@ csv_line read_csv(char* file_name){
         if (lines[i] != NULL)
             strcpy(lines[i], buffer);
         else
-            printf("Erro ao alocar a linha [%d]!\n", i);
+            printf("ERRO! Não foi possível alocar memória (read_csv - 2)\n");
 
         i++;
     }
@@ -146,7 +146,7 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
 
 
     if (verbose != 0){
-        printf("\n\n==================================== DISTRIBUIÇÃO DE ALGOTIMOS PELA ÁRVORE DE DECISÃO ===================================================\n\n");
+        printf("\n\n================================= DISTRIBUIÇÃO DE ALGOTIMOS PELA ÁRVORE DE DECISÃO ================================================\n\n");
         printf("            count - %%      avg(t)    avg(n)    avg(amp)   avg(distr)   avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
     }
 
@@ -157,12 +157,13 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
         fptr = fopen("results/resultados.txt", "a");
         
         if (fptr == NULL) {
-            printf("Erro ao criar o arquivo tabela_resultados.txt!\n");
-            return;
+            printf("ERRO! Não foi possível abrir o arquivo de resultados (decision_tree_statistics)\n");
+            fclose(fptr);
+            out_txt = 0;
         }
 
         //o que vai pro txt é o fprintf
-        fprintf(fptr, "\n\n==================================== DISTRIBUIÇÃO DE ALGOTIMOS PELA ÁRVORE DE DECISÃO =============================================\n\n");
+        fprintf(fptr, "\n\n================================= DISTRIBUIÇÃO DE ALGOTIMOS PELA ÁRVORE DE DECISÃO =========================================\n");
         fprintf(fptr, "            count - %%      avg(t)    avg(n)    avg(amp)   avg(distr)   avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
     }
 
@@ -176,6 +177,7 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
                 case 3: printf("%-12s", "MERGE"); break;
                 case 4: printf("%-12s", "SORTING"); break;
             }
+
             if (method_count[i] == 0){
                 printf("    0 - 0.00   -         -         -          -            -           -          -          -          -\n");
                 continue;
@@ -257,7 +259,7 @@ void adaptive_comparison(metrics **m, int quant, int algs_count, int verbose, in
     }
 
     if (verbose != 0){
-        printf("============= COMPARAÇÃO DA ÁRVORE DE DECISÃO COM UM ALGORITMO ESTÁTICO ============\n\n");
+        printf("======================= COMPARAÇÃO DOS MÉTODOS DE ORDENAÇÃO ======================\n");
         printf("            avg(t)     avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
     }
 
@@ -266,11 +268,12 @@ void adaptive_comparison(metrics **m, int quant, int algs_count, int verbose, in
         // Abre o arquivo .txt para salvar a tabela
         fptr = fopen("results/resultados.txt", "w");
         if (fptr == NULL) {
-            printf("Erro ao criar o arquivo tabela_resultados.txt!\n");
-            return;
+            printf("ERRO! Não foi possível abrir o arquivo de resultados (decision_tree_statistics)\n");
+            fclose(fptr);
+            out_txt = 0;
         }
         //o que vai pro txt é o fprintf
-        fprintf(fptr, "============= COMPARAÇÃO DA ÁRVORE DE DECISÃO COM UM ALGORITMO ESTÁTICO ============\n\n");
+        fprintf(fptr, "======================= COMPARAÇÃO DOS MÉTODOS DE ORDENAÇÃO ======================\n");
         fprintf(fptr, "            avg(t)     avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)\n");
     }
 
@@ -317,4 +320,21 @@ void adaptive_comparison(metrics **m, int quant, int algs_count, int verbose, in
 
     //Fechamento do arquivo
     if (out_txt != 0) fclose(fptr);
+}
+
+
+// Mostra quantos vetores já foram ordenados
+void print_progress_bar(int current, int total) {
+    int bar_width = 40; 
+    
+    int filled_length = (current * bar_width)/total;
+
+    printf("\rOrdenados: [");
+    
+    for (int i = 0; i < filled_length; ++i) printf("#");
+    for (int i = filled_length; i < bar_width; ++i) printf(".");
+    
+    printf("] (%d/%d)", current, total);
+
+    fflush(stdout);
 }

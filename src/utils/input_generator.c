@@ -11,13 +11,13 @@ int *random_arr(int max_num, int max_size){
         int *arr = (int *)malloc((n+1) * sizeof(int));
 
         if (arr == NULL){
-            printf("ERRO! Alocação de memória para os dados de entradas falhou!");
+            printf("ERRO! Não foi possível alocar memória (random_arr)");
             return NULL;
         }
 
     // Decide o menor e o maior valor presente no vetor
         int amp = random_float(0, 95) * max_num;
-        int has_negative = atoi(getenv("NEGATIVE"));
+        int has_negative = convert_env("NEGATIVE", 0, 0, 100);
         int negative = random_int(0, 101);
 
         int min = (negative < has_negative) ? random_int(0, (max_num-amp)) : random_int(-1 * max_num + 1, 1);
@@ -47,13 +47,13 @@ int *random_sorted_arr(int max_num, int max_size){
         int *arr = (int *)malloc((n+1) * sizeof(int));
 
         if (arr == NULL){
-            printf("ERRO! Alocação de memória para os dados de entradas falhou!");
+            printf("ERRO! Não foi possível alocar memória (random_sorted_arr)");
             return NULL;
         }
 
     // Decide o menor e o maior valor presente no vetor
         int amp = random_float(0, 95) * max_num;
-        int has_negative = atoi(getenv("NEGATIVE"));
+        int has_negative = convert_env("NEGATIVE", 0, 0, 100);
         int negative = random_int(0, 101);
 
         int min = (negative < has_negative) ? random_int(0, (max_num-amp)) : random_int(-1 * max_num + 1, 1);
@@ -110,13 +110,13 @@ int *random_reverse_arr(int max_num, int max_size){
         int *arr = (int *)malloc((n+1) * sizeof(int));
 
         if (arr == NULL){
-            printf("ERRO! Alocação de memória para os dados de entradas falhou!");
+            printf("ERRO! Não foi possível alocar memória (random_reverse_arr)");
             return NULL;
         }
 
     // Decide o menor e o maior valor presente no vetor
         int amp = random_float(0, 95) * max_num;
-        int has_negative = atoi(getenv("NEGATIVE"));
+        int has_negative = convert_env("NEGATIVE", 0, 0, 100);
         int negative = random_int(0, 101);
 
         int min = (negative < has_negative) ? random_int(0, (max_num-amp)) : random_int(-1 * max_num + 1, 1);
@@ -173,12 +173,12 @@ int *random_equal_arr(int max_num, int max_size){
         int *arr = (int *)malloc((n+1) * sizeof(int));
 
         if (arr == NULL){
-            printf("ERRO! Alocação de memória para os dados de entradas falhou!");
+            printf("ERRO! Não foi possível alocar memória (random_equal_arr)");
             return NULL;
         }
 
     // Decide o valor que ocupara todas as posicoes do vetor
-        int has_negative = atoi(getenv("NEGATIVE"));
+        int has_negative = convert_env("NEGATIVE", 0, 0, 100);
         int negative = random_int(0, 101);
         int num = (negative < has_negative) ? random_int(0, max_num) : random_int(-1*max_num + 1, 1);
 
@@ -213,7 +213,7 @@ int *random_adversarial_arr(int max_num, int max_size){
         int *arr = (int *)malloc((n+1) * sizeof(int));
 
         if (arr == NULL){
-            printf("ERRO! Alocação de memória para os dados de entradas falhou!");
+            printf("ERRO! Não foi possível alocar memória (random_adversarial_arr)");
             return NULL;
         }
 
@@ -224,7 +224,7 @@ int *random_adversarial_arr(int max_num, int max_size){
 
     
     // Roda a probabilidade de incluir números negativos no array
-        int has_negative = atoi(getenv("NEGATIVE"));
+        int has_negative = convert_env("NEGATIVE", 0, 0, 100);
         int negative = random_int(0, 101);
 
         if (negative < has_negative)
@@ -284,33 +284,49 @@ int **create_arrs(int quant, int max_size, int max_num){
     int **arrs = (int**)malloc(quant * sizeof(int *));
 
     if (arrs == NULL){
-        printf("ERRO! Alocação de memória para os dados de entradas falhou!");
+        printf("ERRO! Não foi possível alocar memória (create_arrs)");
         return NULL;
     }
 
     int choice;
 
-    int adversarial = atoi(getenv("ADV"));
-    int sorted = atoi(getenv("SRT"));
-    int reverse_sorted = atoi(getenv("R_SRT"));
-    int all_equal = atoi(getenv("EQUAL"));
+    int adversarial = convert_env("ADV", 0, 0, 100);
+    int sorted = convert_env("SRT", 0, 0, 100);
+    int reverse_sorted = convert_env("R_SRT", 0, 0, 100);
+    int all_equal = convert_env("EQUAL", 0, 0, 100);
+
+    if (adversarial + sorted + reverse_sorted + all_equal > 100 ){
+        adversarial = 30;
+        sorted = 5;
+        reverse_sorted = 5;
+        all_equal = 5;
+    }
 
     for (int i = 0; i < quant; i++){
         choice = random_int(1, 101);
 
         if (choice < adversarial){
             arrs[i] = random_adversarial_arr(max_num, max_size);
+            continue;
         } 
+
+        sorted += adversarial;
         
-        else if (choice < adversarial + sorted){
+        if (choice < sorted){
             arrs[i] = random_sorted_arr(max_num, max_size);
+            continue;
         }
     
-        else if (choice < adversarial + sorted + reverse_sorted){
+        reverse_sorted += sorted;
+
+        if (choice < reverse_sorted){
             arrs[i] = random_reverse_arr(max_num, max_size);
+            continue;
         }
 
-        else if (choice < adversarial + sorted + reverse_sorted + all_equal){
+        all_equal += reverse_sorted;
+
+        if (choice < all_equal){
             arrs[i] = random_equal_arr(max_num, max_size);
         }
             

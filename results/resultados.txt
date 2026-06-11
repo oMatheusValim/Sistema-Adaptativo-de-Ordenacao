@@ -1,0 +1,15 @@
+======================= COMPARAÇÃO DOS MÉTODOS DE ORDENAÇÃO ======================
+            avg(t)     avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)
+ADAPTATIVO  0.00173    5085        4945       9364       0          1            
+COUNT       0.00180    4951        4951       9510       0          1            
+HEAP        0.03570    46731       24161      0          25399      10           
+INSERTION   0.44692    4015131     4012933    0          0          1            
+MERGE       0.02164    16551       57631      9902       4950       12           
+SELECTION   0.29073    192227      2474       0          0          1            
+
+
+================================= DISTRIBUIÇÃO DE ALGOTIMOS PELA ÁRVORE DE DECISÃO =========================================
+            count - %      avg(t)    avg(n)    avg(amp)   avg(distr)   avg(cmp)    avg(mov)   avg(mem)   avg(rec)   avg(max_depth)
+COUNT          94 - 0.94   0.00182   2628      2490       0.179        5256        5256       9962       0          1            
+INSERTION       1 - 0.01   0.00002   78        463        0.000        77          0          0          0          1            
+SORTING         5 - 0.05   0.00050   84        634        1.000        2862        83         0          0          1            

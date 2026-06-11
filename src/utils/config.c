@@ -19,7 +19,7 @@ void config_load_file() {
     FILE *fptr = fopen(CONFIG_FILE, "r");
 
     if (fptr == NULL) {
-        printf("Erro! Não foi possível abrir o arquivo de configuração!");
+        printf("ERRO! Não foi possível abrir o arquivo de configurações (config_load_file)");
         return;
     }
  
@@ -50,13 +50,15 @@ void config_load_file() {
 //função config_load_ars: Carrega as constantes das linhas de comando
 void config_load_args(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
+
         if (strncmp(argv[i], "--", 2) != 0) continue;
  
         char buf[MAX_LINE_LEN];
         strncpy(buf, argv[i] + 2, sizeof(buf) - 1);
         char *eq = strchr(buf, '=');
  
-        char *key = NULL, *val = NULL;
+        char *key = NULL;
+        char *val = NULL;
  
         if (eq) {
             *eq = '\0';
@@ -70,13 +72,9 @@ void config_load_args(int argc, char *argv[]) {
             i++;
         } 
         
-        else {
-            continue;
-        } 
+        else continue; 
     
         setenv(key, val, 1);
-
-
     }
 }
  
@@ -97,7 +95,7 @@ int load_envs(int argc, char *argv[]){
     algs_count += atoi(getenv("S") ? getenv("S") : "0");
 
     if (algs_count == 0){
-        printf("Erro! É necessário incluir pelo menos um algoritmo de sorting ou o método adaptativo!\n ");
+        printf("ERRO! É necessário incluir pelo menos um algoritmo de sorting ou o método adaptativo! \n ");
         return -1;
     }
 
@@ -106,20 +104,34 @@ int load_envs(int argc, char *argv[]){
 
 
 // função convert_env: verifica se as contantes estão definidas corretamente e as modifica para inteiros
-int convert_env(char* key, int lower, int upper){
+int convert_env(char* key, int def, int lower, int upper){
 
     char *key_c = (getenv(key));
 
     if (key_c == NULL){
-        printf("Erro! A variável %s não está definida! Inclua-a em uma linha de comando ou no arquivo de configuração!\n", key_c);
-        return -1;
+        if (def < 0){
+            printf("ERRO! A variável %s não está definida. Inclua-a em uma linha de comando ou no arquivo de configuração.\n", key);
+            return -1;
+        }
+
+        else{
+            printf("WARNING! A variável %s não está definida. Usando o default %d...\n", key, def);
+            return def;
+        }
     }
         
     int key_i = atoi(key_c);
 
     if (key_i < lower || key_i > upper){
-        printf("Erro! A variável %s deve estar entre %d e %d!\n", key_c, lower, upper);
-        return -1;
+        if (def < 0){
+            printf("ERRO! A variável %s deve estar entre %d e %d.\n", key, lower, upper);
+            return -1;
+        }
+
+        else{
+            printf("WARNING! A variável %s deve estar entre %d e %d. Usando o default %d...\n", key, lower, upper, def);
+            return def;
+        }
     }
 
     return key_i;

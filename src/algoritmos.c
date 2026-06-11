@@ -294,7 +294,7 @@ metrics countingSort1(int arr[], int n){
     m.memory+=(maior - menor + 1)*(sizeof(int));
 
     if (aux == NULL){
-        printf("Alocation error\n");
+        printf("ERRO! Não foi possível alocar memória (countingSort1)\n");
         return m;
     }
 

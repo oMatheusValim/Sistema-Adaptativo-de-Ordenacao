@@ -28,5 +28,6 @@ VERBOSE=1
 OUT_TXT=1
 EOF
 
+# Compilar e rodar
 make
 make run

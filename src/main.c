@@ -17,7 +17,7 @@ static int generate_and_write_csv( char *csv_path, int quant, int max_size, int 
     int **arrs = create_arrs(quant, max_size, max_num);
 
     if (arrs == NULL) {
-        printf("Erro! Não foi possível gerar os arrays.\n");
+        printf("ERRO! Não foi possível gerar os vetores aleatórios para ordenação (generate_and_write_csv)\n");
 
         return -1;
     }
@@ -52,14 +52,14 @@ static char *resolve_csv(int *out_quant, int *out_max_size, int *out_max_num){
         return strdup(csv_full);
     }
  
-    int quant = convert_env("QUANT", 1, 80000); if (quant < 0) return NULL;
-    int max_num  = convert_env("MAX_NUM", 100, 100000); if (max_num  < 0) return NULL;
-    int max_size = convert_env("MAX_SIZE", 10,  25000); if (max_size < 0) return NULL;
+    int quant = convert_env("QUANT", 100, 1, 80000); if (quant < 0) return NULL;
+    int max_num  = convert_env("MAX_NUM", 500, 100, 100000); if (max_num  < 0) return NULL;
+    int max_size = convert_env("MAX_SIZE", 150, 10,  25000); if (max_size < 0) return NULL;
  
     char *csv_path = (char*)malloc(64*sizeof(char));
 
     if (csv_path == NULL){
-        printf("Erro! Falha na alocação de memória para a análise.\n"); 
+        printf("ERRO! Não foi possível alocar memória (resolve_csv - 1)\n"); 
         return NULL;
     }
 
@@ -69,7 +69,7 @@ static char *resolve_csv(int *out_quant, int *out_max_size, int *out_max_num){
  
     if (generate_and_write_csv(csv_path, quant, max_size, max_num) < 0) {
         free(csv_path);
-        printf("Erro! Falha na alocação de memória para a análise.\n");
+        printf("ERRO! Não foi possível alocar memória (resolve_csv - 2)\n");
         return NULL;
     }
  
@@ -125,20 +125,22 @@ static metrics run_algorithm(alg_ctx *alg, entry_analysis *ea_out, int max_size)
 
 //função run_analysis: faz a ordenação e obtém os parâmetros de execução do algoritmo escolhido para cada vetor no arquivo csv.
 static int run_analysis(csv_line *cl, alg_ctx *algs, int algs_count, metrics **m, entry_analysis *ea, int method_count[6]){
- 
+    
+    int ordered = 0;
+
     for (int i = 0; i < cl->quant; i++) {
         if (cl->lines[i] == NULL) continue;
 
-        if (verbose != 0) printf("ordenados: %d/%d\n",i, cl->quant);
- 
         /* Fill each alg's arr with a fresh copy of this input */
         algs = cpy_arrs(cl->lines[i], algs, algs_count);
  
         for (int j = 0; j < algs_count; j++) {
             m[j][i] = run_algorithm(&algs[j], &ea[i], cl->max_size);
  
-            if (verify_sort(algs[j].arr, algs[j].size) < 0)
-                printf("Erro! O algoritmo %c não ordenou corretamente o vetor #%d\n", m[j][i].method, algs[j].index);
+            if (verify_sort(algs[j].arr, algs[j].size) < 0){
+                printf("WARNNING! O algoritmo %c não ordenou corretamente o vetor #%d (run_analysis)\n", m[j][i].method, algs[j].index);
+                ordered--;
+            }
 
             if (algs[j].method == 'A') {
                 method_count[char_to_int(m[j][i].method)]++;
@@ -147,8 +149,13 @@ static int run_analysis(csv_line *cl, alg_ctx *algs, int algs_count, metrics **m
             free(algs[j].arr);
             algs[j].arr = NULL;
         }
+
+        ordered++;
+        if (verbose != 0) print_progress_bar(ordered, cl->quant);
+
     }
- 
+
+    if (verbose != 0) printf("\n\n");
     return 0;
 }
 
@@ -184,7 +191,7 @@ int main(int argc, char *argv[]){
     int method_count[6] = {0};
 
     if (algs == NULL || ea == NULL || m == NULL) {
-        printf("Erro! Falha na alocação de memória para a análise.\n");
+        printf("ERRO! Não foi possível alocar memória (main)\n");
 
         free(algs); free(ea); free_metrics(m, algs_count);
         for (int i = 0; i < quant; i++) free(cl.lines[i]);
@@ -193,7 +200,7 @@ int main(int argc, char *argv[]){
         return -1;
     }
 
-    if (verbose != 0) printf("Inicio da análise...\n");
+    if (verbose != 0) printf("Inicio da análise...\n\n");
     run_analysis(&cl, algs, algs_count, m, ea, method_count);
 
     

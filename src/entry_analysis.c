@@ -1,6 +1,7 @@
 #include "utils/headers/utils.h"
 #include "headers/entry_analysis.h"
 
+//função entry_amp: verifica a amplitude máxima dos valors do vetor (maior valor do vetor - menor valor do vetor). Retorna valor inteiro da amplitude.
 int *entry_amp(int *arr, int n){
 
     int *min_max = (int*)calloc(2, sizeof(int));
@@ -21,6 +22,7 @@ int *entry_amp(int *arr, int n){
     return min_max;
 }
 
+//Função entry_disp: coleta métricas das medidas de dispersão do vetor. retorna struct disp composta por essas medidas.
 dispersion_analysis entry_disp(int *arr, int n){
 
     float sum = 0.0;
@@ -54,6 +56,7 @@ dispersion_analysis entry_disp(int *arr, int n){
     return disp;            
 }
 
+//função count_uniques: conta o número de valores não repetidos dentro do vetor desordenado. retorna inteiro.
 int count_uniques(int *arr, int n, int *min_max){
 
     int offset = -1*min_max[0];
@@ -77,7 +80,7 @@ int count_uniques(int *arr, int n, int *min_max){
     return uniques;
 }
 
-
+//função countInv: conta o número de vezes que um elemento é maior que seu sucessor dentro do vetor. retorna inteiro.
 int countInv(int *arr, int n) {
 
     int count = 0;
@@ -92,6 +95,12 @@ int countInv(int *arr, int n) {
     return count;
 }
 
+/*função entry_distr: coleta:
+ * métrica de desordem do vetor: calculada pela razão entre o número de inversões que ocorrem no vetor e o maior número possíveis de inversões para aquele vetor, dado por n-1;
+ * densidade de duplicatas no vetor, dada pela razão entre o número de duplicatas e o tamanho n do vetor.
+ * número de valores não repetidos no vetor;
+*retorna struct do tipo distribution analysis que armazena as métricas de caracterização de distribuição do vetor de entrada.
+*/
 distribution_analysis entry_distr(int *arr, int n, int *min_max){
 
     distribution_analysis distr = {0};   
@@ -118,7 +127,14 @@ distribution_analysis entry_distr(int *arr, int n, int *min_max){
     return distr;
 }
 
-
+//função analyse_entry: coleta todas as características do vetor de entrada. retorna um struct do tipo entry_analysis contendo:
+/*
+tamanho do vetor;
+cópia do vetor desordenado;
+index do vetor na entrada;
+amplitude;
+struct de características de distribuição do vetor de entrada;
+*/
 entry_analysis analyse_entry(int *arr, int n, int index){
 
     entry_analysis ea = {0};

@@ -4,7 +4,7 @@
 #define CONFIG_FILE "experiments/config.txt"
 #define MAX_LINE_LEN 100
  
-// Remove whitespace da string
+// função trim: Remove whitespace da string
 static char *trim(char *s) {
     while (*s == ' ' || *s == '\t') s++;
     char *end = s + strlen(s) - 1;
@@ -14,7 +14,7 @@ static char *trim(char *s) {
 }
  
 
-// Carrega as constantes do ".env"
+//função config_load_file: Carrega as constantes do ".env"
 void config_load_file() {
     FILE *fptr = fopen(CONFIG_FILE, "r");
 
@@ -46,7 +46,8 @@ void config_load_file() {
 }
  
 
-// Carrega as constantes das linhas de comando
+
+//função config_load_ars: Carrega as constantes das linhas de comando
 void config_load_args(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (strncmp(argv[i], "--", 2) != 0) continue;
@@ -80,7 +81,7 @@ void config_load_args(int argc, char *argv[]) {
 }
  
  
-// Carrega os parametros definidos no ".env"
+// função load_envs: obtém os parametros definidos no ".env"
 int load_envs(int argc, char *argv[]){
 
     config_load_file();
@@ -104,7 +105,7 @@ int load_envs(int argc, char *argv[]){
 }
 
 
-// Já verifica se as contantes tão no jeito e passa pra int
+// função convert_env: verifica se as contantes estão definidas corretamente e as modifica para inteiros
 int convert_env(char* key, int lower, int upper){
 
     char *key_c = (getenv(key));

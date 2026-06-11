@@ -1,5 +1,6 @@
 #include "headers/utils.h"
 
+//função date_time_stamp: retorna a data e horário da execução do código para nomeação do arquivo csv de entrada.
 char *datetime_stamp(){
     time_t raw_time = time(NULL);
     struct tm *time_info = localtime(&raw_time);
@@ -10,6 +11,7 @@ char *datetime_stamp(){
     return buffer;
 }
 
+//função char_to_int: converte o caractere de escolha de método de ordenação para um número inteiro.
 int char_to_int(char method){
     switch (method){
         case 'c':
@@ -33,6 +35,7 @@ int char_to_int(char method){
     }
 }
 
+//função int_to_chat: converte o inteiro de escolha do método de ordenação para um caractere.
 char int_to_char(int method){
     switch (method){
         case 0:
@@ -56,6 +59,7 @@ char int_to_char(int method){
     }
 }
 
+//função random_int: retorna um inteiro randômico em um intervalo escolhido.
 int random_int(int min, int max){
     if (min==max){
         return min;
@@ -64,6 +68,8 @@ int random_int(int min, int max){
     return ((rand() % (max - min)) + min);
 }
 
+
+//função random_float: retorna um número tipo float randômico entre probabilidades máximas e mínimas.
 float random_float(int lower_odds, int upper_odds){
     float odds = (float)(random_int(lower_odds, upper_odds+1)/100.0);
     return odds;

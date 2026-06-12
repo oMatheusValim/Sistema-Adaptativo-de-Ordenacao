@@ -15,7 +15,6 @@ int write_csv(int **arrs, char* filename, int quant, int max_size, int max_num){
     fprintf(fptr, "index,nums...\n");
     fprintf(fptr, "%dQ, %dS, %dN\n", quant, max_size, max_num);
     for (int i = 0; i < quant; i++){
-        long pos_start = ftell(fptr);
         fprintf(fptr, "%d,", i);
 
         int j = 0;
@@ -82,8 +81,6 @@ csv_line read_csv(char* file_name){
         return cl;
     }
 
-    int digits = (int)log10(max_num) + 1;
-    int buffers_size = (max_size + 1) * (digits + 1) + 16;
 
     char **lines = (char **)calloc((quant), sizeof(char *));
 
@@ -126,7 +123,7 @@ void decision_tree_statistics(entry_analysis *ea, metrics *m, int *method_count,
 
     if ((verbose + out_txt) <= 0) return;
 
-    tree_statistics ts[5] = {0, 0, 0, 0, 0};
+    tree_statistics ts[5] = {0};
 
     int method;
 

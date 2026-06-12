@@ -64,7 +64,6 @@ int count_uniques(int *arr, int n, int *min_max){
     int amp = min_max[1] - min_max[0] + 1;
 
     int *count = (int*)calloc(amp, sizeof(int));
-    int i;
     int uniques = 0;
 
     //conta repetições

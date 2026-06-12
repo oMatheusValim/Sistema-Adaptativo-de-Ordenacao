@@ -1,45 +1,69 @@
+CC = gcc
+
+CFLAGS = -Wall -I./headers
+LDFLAGS = -lm
+
 HEADERS = ./headers
 SRC = ./src
 UTILS = ./src/utils
 OBJ = ./obj
 
-UTL = /utils
-IO = /io
-EA = /entry_analysis
-ALG = /algoritmos
-IG = /input_generator
-ADP = /adaptive
-MC = /method_compare
-CFG = /config
+TARGET = $(OBJ)/run.exe
 
-all:
-	gcc -c $(UTILS)$(UTL).c  -I $(HEADERS)/  -o $(OBJ)$(UTL).o
-	gcc -c $(UTILS)$(CFG).c  -I $(HEADERS)/  -o $(OBJ)$(CFG).o
-	gcc -c $(UTILS)$(IO).c   -I $(HEADERS)/  -o $(OBJ)$(IO).o
-	gcc -c $(UTILS)$(IG).c   -I $(HEADERS)/  -o $(OBJ)$(IG).o
-	gcc -c $(SRC)$(EA).c     -I $(HEADERS)/  -o $(OBJ)$(EA).o
-	gcc -c $(SRC)$(ALG).c    -I $(HEADERS)/  -o $(OBJ)$(ALG).o
-	gcc -c $(SRC)$(ADP).c    -I $(HEADERS)/  -o $(OBJ)$(ADP).o
-	gcc -c $(SRC)$(MC).c     -I $(HEADERS)/  -o $(OBJ)$(MC).o
-	gcc $(SRC)/main.c $(OBJ)$(UTL).o $(OBJ)$(CFG).o $(OBJ)$(IO).o $(OBJ)$(IG).o $(OBJ)$(EA).o $(OBJ)$(ALG).o $(OBJ)$(ADP).o $(OBJ)$(MC).o -I $(HEADERS) -o $(OBJ)/run.exe -lm
+UTILS_OBJS = \
+	$(OBJ)/utils.o \
+	$(OBJ)/config.o \
+	$(OBJ)/io.o \
+	$(OBJ)/input_generator.o
 
-run:
-	$(OBJ)/run.exe
+SRC_OBJS = \
+	$(OBJ)/entry_analysis.o \
+	$(OBJ)/algoritmos.o \
+	$(OBJ)/adaptive.o \
+	$(OBJ)/method_compare.o
 
-val:
-	gcc -c $(UTILS)$(UTL).c  -I $(HEADERS)/  -o $(OBJ)$(UTL).o
-	gcc -c $(UTILS)$(CFG).c  -I $(HEADERS)/  -o $(OBJ)$(CFG).o
-	gcc -c $(UTILS)$(IO).c   -I $(HEADERS)/  -o $(OBJ)$(IO).o
-	gcc -c $(UTILS)$(IG).c   -I $(HEADERS)/  -o $(OBJ)$(IG).o
-	gcc -c $(SRC)$(EA).c     -I $(HEADERS)/  -o $(OBJ)$(EA).o
-	gcc -c $(SRC)$(ALG).c    -I $(HEADERS)/  -o $(OBJ)$(ALG).o
-	gcc -c $(SRC)$(ADP).c    -I $(HEADERS)/  -o $(OBJ)$(ADP).o
-	gcc -c $(SRC)$(MC).c     -I $(HEADERS)/  -o $(OBJ)$(MC).o
-	gcc -g -O0 $(SRC)/main.c $(OBJ)$(UTL).o $(OBJ)$(CFG).o $(OBJ)$(IO).o $(OBJ)$(IG).o $(OBJ)$(EA).o $(OBJ)$(ALG).o $(OBJ)$(ADP).o $(OBJ)$(MC).o -I $(HEADERS) -o $(OBJ)/run.exe -lm
+MAIN_OBJ = $(OBJ)/main.o
 
-run_val:
-	valgrind -s --log-file="results/valgrind_report.txt" --leak-check=full --show-leak-kinds=all --track-origins=yes $(OBJ)//run.exe
+OBJS = $(UTILS_OBJS) $(SRC_OBJS)
+
+.PHONY: all run clean val run_val
+
+all: $(TARGET)
+
+$(TARGET): $(MAIN_OBJ) $(OBJS)
+	$(CC) $^ -o $@ $(LDFLAGS)
+
+# main.c
+
+$(OBJ)/main.o: $(SRC)/main.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Arquivos em src/
+
+$(OBJ)/%.o: $(SRC)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Arquivos em src/utils/
+
+$(OBJ)/%.o: $(UTILS)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+run: $(TARGET)
+	./$(TARGET)
+
+val: CFLAGS += -g -O0
+val: clean all
+
+run_val: $(TARGET)
+	valgrind \
+		-s \
+		--log-file="results/valgrind_report.txt" \
+		--leak-check=full \
+		--show-leak-kinds=all \
+		--track-origins=yes \
+		./$(TARGET)
 
 clean:
-	rm $(OBJ)/*.o
-	rm $(OBJ)/*.exe
+	rm -f $(OBJ)/*.o $(OBJ)/*.d $(TARGET)
+
+-include $(OBJS:.o=.d) $(MAIN_OBJ:.o=.d)

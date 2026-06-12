@@ -9,15 +9,15 @@ S=1
 # Detalhes da entrada
 CSV_FILE=
 QUANT=100
-MAX_SIZE=5000
+MAX_SIZE=500
 MAX_NUM=1000
 
 NEGATIVE=10
 
-ADV=
-SRT=8
-R_SRT=8
-EQUAL=4
+ADV=35
+SRT=5
+R_SRT=5
+EQUAL=5
 
 # Detalhes da saída
 VERBOSE=1
